@@ -1,0 +1,156 @@
+<html>
+
+  <head>
+  </head>
+
+  <body>
+
+    <style>
+
+    .axis {
+      font: 10px sans-serif;
+    }
+
+    .axis path,
+    .axis line {
+      fill: none;
+      stroke: #000;
+      shape-rendering: crispEdges;
+    }
+
+    .axis--x path {
+      display: none;
+    }
+
+    .line {
+      fill: none;
+      stroke: steelblue;
+      stroke-width: 1.5px;
+    }
+
+    </style>
+
+
+    <h1>Chart</h1>
+    <h2>MicroCat 1</h2>
+    <div id="chart_mc1_s"></div>
+    <div id="chart_mc1_t"></div>
+    <div id="chart_mc1_p"></div>
+
+    <h2>MicroCat 2</h2>
+    <div id="chart_mc2_s"></div>
+    <div id="chart_mc2_t"></div>
+    <div id="chart_mc2_p"></div>
+
+    <h2>MicroCat 3</h2>
+    <div id="chart_mc3_s"></div>
+    <div id="chart_mc3_t"></div>
+    <div id="chart_mc3_p"></div>
+
+    <h2>MicroCat 4</h2>
+    <div id="chart_mc4_s"></div>
+    <div id="chart_mc4_t"></div>
+    <div id="chart_mc4_p"></div>
+
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script>
+
+function drawPlot(data, id, var1, var2) {
+
+  var margin = {top: 20, right: 20, bottom: 30, left: 80},
+      width = 500 - margin.left - margin.right,
+      height = 200 - margin.top - margin.bottom;
+
+  var x = d3.scaleTime()
+    .range([0, width]);
+
+  var y = d3.scaleLinear()
+    .range([height, 0]);
+
+  var line = d3.line()
+    .x(function(d) { return x(d[var1]); })
+    .y(function(d) { return y(d[var2]); });
+
+  var svg = d3.select(id)
+    .append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+  x.domain(d3.extent(data, function(d) { return d[var1]; }));
+  y.domain(d3.extent(data, function(d) { return d[var2]; }));
+
+  svg.append("g")
+        .attr("class", "axis axis--x")
+        .attr("transform", "translate(0," + height + ")")
+        .call(d3.axisBottom(x));
+
+  svg.append("g")
+        .attr("class", "axis axis--y")
+        .call(d3.axisLeft(y))
+      .append("text")
+        .attr("class", "axis-title")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 6)
+        .attr("dy", ".71em")
+        .style("text-anchor", "end")
+        .text(var2.toUpperCase());
+
+  svg.append("path")
+    .datum(data)
+    .attr("class", "line")
+    .attr("d", line);
+
+  return svg;
+};
+
+function parseDate(year, dayNumber) {
+  var hour = Math.floor((dayNumber % 1) * 24);
+  var minute = (((dayNumber % 1) * 24) % 1) * 60;
+  return new Date(year, 0, Math.floor(dayNumber), hour, minute);
+}
+
+function convertData(row) {
+  var name;
+  for (name in row) {
+    row[name] = +row[name];
+  }
+  row.date = parseDate(row.year, row.day);
+  return row;
+}
+
+d3.csv("data/itm5micro1.csv", convertData, function(error, data) {
+  if (error) throw error;
+  drawPlot(data, "#chart_mc1_s", "date", "salinity");
+  drawPlot(data, "#chart_mc1_t", "date", "temperature");
+  drawPlot(data, "#chart_mc1_p", "date", "pressure");
+});
+
+d3.csv("data/itm5micro2.csv", convertData, function(error, data) {
+  if (error) throw error;
+  drawPlot(data, "#chart_mc2_s", "date", "salinity");
+  drawPlot(data, "#chart_mc2_t", "date", "temperature");
+  drawPlot(data, "#chart_mc2_p", "date", "pressure");
+});
+
+d3.csv("data/itm5micro3.csv", convertData, function(error, data) {
+  if (error) throw error;
+  drawPlot(data, "#chart_mc3_s", "date", "salinity");
+  drawPlot(data, "#chart_mc3_t", "date", "temperature");
+  drawPlot(data, "#chart_mc3_p", "date", "pressure");
+});
+
+d3.csv("data/itm5micro4.csv", convertData, function(error, data) {
+  if (error) throw error;
+  drawPlot(data, "#chart_mc4_s", "date", "salinity");
+  drawPlot(data, "#chart_mc4_t", "date", "temperature");
+  drawPlot(data, "#chart_mc4_p", "date", "pressure");
+});
+
+
+    </script>
+
+  </body>
+
+</html>
