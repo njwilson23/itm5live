@@ -45,6 +45,8 @@ def dat2csv(d):
         fields = ["year", "day", "pressure", "temperature", "east", "north", "up"]
     elif "microcat" in s[:20]:
         fields = ["year", "day", "temperature", "salinity", "pressure"]
+    elif "longitude" in s[:30]:
+        return None
     else:
         raise IOError("unknown header: '{0}'".format(s[:20]))
     data = s.split("\n", 2)[2]
@@ -61,9 +63,12 @@ def savetocsv(d, dirname="static/data"):
         LOG.info("parsing {0}".format(name))
         try:
             csvrows = dat2csv(d[name])
-            csvname = name.replace(".dat", ".csv")
-            with open(os.path.join(dirname, csvname), "w") as f:
-                f.write("\n".join(csvrows))
+            if csvrows is None:
+                LOG.warn("no data returned from {0}".format(name))
+            else:
+                csvname = name.replace(".dat", ".csv")
+                with open(os.path.join(dirname, csvname), "w") as f:
+                    f.write("\n".join(csvrows))
         except Exception as e:
             LOG.error(e)
     return
