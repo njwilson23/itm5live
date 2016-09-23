@@ -1,15 +1,19 @@
-from flask import Flask, url_for
+from flask import Flask, send_from_directory, send_file
 
-app = Flask("itmplots")
+app = Flask("itm5live", static_url_path="")
 
 @app.route("/")
 def root():
-    u = url_for("static", filename="chart_bokeh.html")
-    return u
+    return send_file("static/chart.html")
 
-@app.route("/itm5")
-def itm5():
-    return ("itm5")
+@app.route("/static/<path:filename>")
+def send_static(filename):
+    print(filename)
+    return send_from_directory("static", filename)
+
+@app.route("/data/<path:filename>")
+def send_data(filename):
+    return send_from_directory("static/data", filename)
 
 if __name__ == "__main__":
-    app.run()
+    app.run(host='0.0.0.0', port=5000)

@@ -133,7 +133,7 @@
       var axTemp = createLineAxes(geom, "#axTemp", "Temperature (\u00b0C)");
       var axPres = createLineAxes(geom, "#axPres", "Pressure anomaly (dbar)");
 
-      d3.csv("data/itm5micro1.csv", convertData, function(error, data) {
+      d3.csv("/data/itm5micro1.csv", convertData, function(error, data) {
         if (error) throw error;
         addLine(axTemp, data.map(function(d) {
           return {t: d.date, y: d.temperature};
@@ -152,7 +152,7 @@
         rescaleAllLines(axPres);
       });
 
-      d3.csv("data/itm5micro2.csv", convertData, function(error, data) {
+      d3.csv("/data/itm5micro2.csv", convertData, function(error, data) {
         if (error) throw error;
         addLine(axTemp, data.map(function(d) {
           return {t: d.date, y: d.temperature};
@@ -171,7 +171,7 @@
         rescaleAllLines(axPres);
       });
 
-      d3.csv("data/itm5micro3.csv", convertData, function(error, data) {
+      d3.csv("/data/itm5micro3.csv", convertData, function(error, data) {
         if (error) throw error;
         addLine(axTemp, data.map(function(d) {
           return {t: d.date, y: d.temperature};
@@ -190,7 +190,7 @@
         rescaleAllLines(axPres);
       });
 
-      d3.csv("data/itm5micro4.csv", convertData, function(error, data) {
+      d3.csv("/data/itm5micro4.csv", convertData, function(error, data) {
         if (error) throw error;
         addLine(axTemp, data.map(function(d) {
           return {t: d.date, y: d.temperature};
