@@ -2,6 +2,7 @@
 
   <head>
     <link rel="stylesheet" href="/static/chart.css">
+    <link rel="stylesheet" href="https://brick.a.ssl.fastly.net/Aileron:300,400,700,300i">
   </head>
 
   <body>
@@ -12,273 +13,215 @@
       }
     </style>
 
-    <h1>Chart</h1>
+    <h1 class="center">79North Data Stream</h1>
+    <p class="center"><em>August 23, 2016 &mdash; present</em></p>
+    <p class="center">Map may be scrolled or zoomed. Click the legend items to highlight data. Updated every 24 hours.</p>
 
-    <div class="instrument">
-      <h2>MicroCat 1</h2>
-      <div id="chart_mc1_s"></div>
-      <div id="chart_mc1_t"></div>
-      <div id="chart_mc1_p"></div>
+    <div id="key" class="center">
+      <div id="swatch150" class="inactive"><p>150 m</p></div>
+      <div id="swatch250" class="inactive"><p>250 m</p></div>
+      <div id="swatch350" class="inactive"><p>350 m</p></div>
+      <div id="swatch500" class="inactive"><p>500 m</p></div>
+      <br style="clear: left;">
     </div>
-    <div class="instrument">
-      <h2>MicroCat 2</h2>
-      <div id="chart_mc2_s"></div>
-      <div id="chart_mc2_t"></div>
-      <div id="chart_mc2_p"></div>
-    </div>
-    <div class="instrument">
-      <h2>MicroCat 3</h2>
-      <div id="chart_mc3_s"></div>
-      <div id="chart_mc3_t"></div>
-      <div id="chart_mc3_p"></div>
-    </div>
-    <div class="instrument">
-      <h2>MicroCat 4</h2>
-      <div id="chart_mc4_s"></div>
-      <div id="chart_mc4_t"></div>
-      <div id="chart_mc4_p"></div>
-    </div>
+    <div id="axTemp" class="chart center"></div>
+    <div id="axSal" class="chart center"></div>
+    <div id="axPres" class="chart center"></div>
 
-    <div class="instrument">
-      <h2>Aquadopp 1</h2>
-      <div id="chart_ad1_s"></div>
-      <div id="chart_ad1_t"></div>
-      <div id="chart_ad1_p"></div>
-    </div>
-    <div class="instrument">
-      <h2>Aquadopp 2</h2>
-      <div id="chart_ad2_s"></div>
-      <div id="chart_ad2_t"></div>
-      <div id="chart_ad2_p"></div>
-    </div>
-    <div class="instrument">
-      <h2>Aquadopp 3</h2>
-      <div id="chart_ad3_s"></div>
-      <div id="chart_ad3_t"></div>
-      <div id="chart_ad3_p"></div>
-    </div>
-    <div class="instrument">
-      <h2>Aquadopp 4</h2>
-      <div id="chart_ad4_s"></div>
-      <div id="chart_ad4_t"></div>
-      <div id="chart_ad4_p"></div>
-    </div>
+    <script>
+      document.getElementById("swatch150").addEventListener("click", function(event) {
+        var els = document.getElementsByClassName("depth150");
+        var el;
+        if (this.className.includes("inactive")) {
+          this.className = "active";
+        } else {
+          this.className = "inactive";
+        }
+        for (var i=0; i!=els.length; i++) {
+          el = els[i];
+          if (el.classList.contains("active")) {
+            el.classList.remove("active");
+            el.classList.add("inactive");
+          } else {
+            el.classList.remove("inactive");
+            el.classList.add("active");
+          }
+        }
+      });
+      document.getElementById("swatch250").addEventListener("click", function(event) {
+        var els = document.getElementsByClassName("depth250");
+        var el;
+        if (this.className.includes("inactive")) {
+          this.className = "active";
+        } else {
+          this.className = "inactive";
+        }
+        for (var i=0; i!=els.length; i++) {
+          el = els[i];
+          if (el.classList.contains("active")) {
+            el.classList.remove("active");
+            el.classList.add("inactive");
+          } else {
+            el.classList.remove("inactive");
+            el.classList.add("active");
+          }
+        }
+      });
+      document.getElementById("swatch350").addEventListener("click", function(event) {
+        var els = document.getElementsByClassName("depth350");
+        var el;
+        if (this.className.includes("inactive")) {
+          this.className = "active";
+        } else {
+          this.className = "inactive";
+        }
+        for (var i=0; i!=els.length; i++) {
+          el = els[i];
+          if (el.classList.contains("active")) {
+            el.classList.remove("active");
+            el.classList.add("inactive");
+          } else {
+            el.classList.remove("inactive");
+            el.classList.add("active");
+          }
+        }
+      });
+      document.getElementById("swatch500").addEventListener("click", function(event) {
+        var els = document.getElementsByClassName("depth500");
+        var el;
+        if (this.className.includes("inactive")) {
+          this.className = "active";
+        } else {
+          this.className = "inactive";
+        }
+        for (var i=0; i!=els.length; i++) {
+          el = els[i];
+          if (el.classList.contains("active")) {
+            el.classList.remove("active");
+            el.classList.add("inactive");
+          } else {
+            el.classList.remove("inactive");
+            el.classList.add("active");
+          }
+        }
+      });
+    </script>
 
     <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="/static/chart.js"></script>
     <script>
 
-function drawPlot(data, id, var1, var2, x, xAxis, geom) {
-
-  var margin = geom.margin,
-      width = geom.width,
-      height = geom.height;
-
-  //var x = d3.scaleTime().range([0, width]),
-  var x_orig = d3.scaleTime().range([0, width]),
-      y = d3.scaleLinear().range([height, 0]);
-
-  var line = d3.line()
-    .x(function(d) { return x(d[var1]); })
-    .y(function(d) { return y(d[var2]); });
-
-  var svg = d3.select(id)
-    .append("svg")
-      .attr("width", width + margin.left + margin.right)
-      .attr("height", height + margin.top + margin.bottom)
-
-  var g = svg.append("g")
-      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-  x.domain(d3.extent(data, function(d) { return d[var1]; }));
-  y.domain(d3.extent(data, function(d) { return d[var2]; }));
-  x_orig.domain(x.domain());
-
-  var yAxis = d3.axisLeft(y);
-
-  var gX = g.append("g")
-        .attr("class", "axis axis--x")
-        .attr("transform", "translate(0," + height + ")")
-        .call(xAxis);
-
-  var gY = g.append("g")
-        .attr("class", "axis axis--y")
-        .call(yAxis);
-
-  svg.append("text")
-        .attr("class", "y label")
-        .style("text-anchor", "start")
-        .attr("x", -height-margin.top)
-        .attr("y", 16)
-        .attr("dy", ".75em")
-        .attr("transform", "rotate(-90)")
-        .text(var2.toUpperCase());
-
-  g.append("path")
-    .datum(data.filter(function(d, i) {
-      return (i%12==0);
-    }))
-    .attr("class", "line")
-    .attr("d", line);
-
-  //g.selectAll(".axis--x")
-  //  .selectAll("text")
-  //    .attr("transform", "translate(-15,10),rotate(-30)");
-
-  svg.append("defs").append("clipPath")
-      .attr("id", "clip")
-    .append("rect")
-      .attr("width", width)
-      .attr("height", height);
-
-  var zoomRect = g.append("rect")
-    .attr("width", width)
-    .attr("height", height)
-    .style("fill", "none")
-    .style("pointer-events", "all");
-
-  return {zoomRect: zoomRect, gX: gX, g: g, line: line, x_orig: x_orig};
-};
-
-function parseDate(year, dayNumber) {
-  var hour = Math.floor((dayNumber % 1) * 24);
-  var minute = (((dayNumber % 1) * 24) % 1) * 60;
-  return new Date(year, 0, Math.floor(dayNumber), hour, minute);
-}
-
-function convertData(row) {
-  var name;
-  for (name in row) {
-    row[name] = +row[name];
-  }
-  row.date = parseDate(row.year, row.day);
-  return row;
-}
-
-var margin = {top: 20, right: 20, bottom: 50, left: 80},
-    width = 800 - margin.left - margin.right,
-    height = 250 - margin.top - margin.bottom;
-var geom = {margin: margin, width: width, height: height};
-var x = d3.scaleTime().range([0, width]),
-    xAxis = d3.axisBottom(x);
-
-var zoomBehaviours = Array();
-var queue = d3.queue();
-
-queue.defer(function (cb) {
-  d3.csv("data/itm5micro1.csv", convertData, function(error, data) {
-    if (error) throw error;
-    zoomBehaviours.push(drawPlot(data, "#chart_mc1_s", "date", "salinity", x, xAxis, geom));
-    zoomBehaviours.push(drawPlot(data, "#chart_mc1_t", "date", "temperature", x, xAxis, geom));
-    zoomBehaviours.push(drawPlot(data, "#chart_mc1_p", "date", "pressure", x, xAxis, geom));
-    cb(null);
-  });
-});
-
-queue.defer(function (cb) {
-  d3.csv("data/itm5micro2.csv", convertData, function(error, data) {
-    if (error) throw error;
-    zoomBehaviours.push(drawPlot(data, "#chart_mc2_s", "date", "salinity", x, xAxis, geom));
-    zoomBehaviours.push(drawPlot(data, "#chart_mc2_t", "date", "temperature", x, xAxis, geom));
-    zoomBehaviours.push(drawPlot(data, "#chart_mc2_p", "date", "pressure", x, xAxis, geom));
-    cb(null);
-  });
-});
-
-/*queue.defer(function (cb) {
-  d3.csv("data/itm5micro3.csv", convertData, function(error, data) {
-    if (error) throw error;
-    zoomBehaviours.push(drawPlot(data, "#chart_mc3_s", "date", "salinity", x, xAxis, geom));
-    zoomBehaviours.push(drawPlot(data, "#chart_mc3_t", "date", "temperature", x, xAxis, geom));
-    zoomBehaviours.push(drawPlot(data, "#chart_mc3_p", "date", "pressure", x, xAxis, geom));
-    cb(null);
-  });
-});
-
-queue.defer(function (cb) {
-  d3.csv("data/itm5micro4.csv", convertData, function(error, data) {
-    if (error) throw error;
-    zoomBehaviours.push(drawPlot(data, "#chart_mc4_s", "date", "salinity", x, xAxis, geom));
-    zoomBehaviours.push(drawPlot(data, "#chart_mc4_t", "date", "temperature", x, xAxis, geom));
-    zoomBehaviours.push(drawPlot(data, "#chart_mc4_p", "date", "pressure", x, xAxis, geom));
-    cb(null);
-  });
-});
-
-queue.defer(function (cb) {
-  d3.csv("data/itm5adop1.csv", convertData, function(error, data) {
-    if (error) throw error;
-    zoomBehaviours.push(drawPlot(data, "#chart_ad1_s", "date", "north", x, xAxis, geom));
-    zoomBehaviours.push(drawPlot(data, "#chart_ad1_t", "date", "east", x, xAxis, geom));
-    zoomBehaviours.push(drawPlot(data, "#chart_ad1_p", "date", "up", x, xAxis, geom));
-    cb(null);
-  });
-});
-
-queue.defer(function (cb) {
-  d3.csv("data/itm5adop2.csv", convertData, function(error, data) {
-    if (error) throw error;
-    zoomBehaviours.push(drawPlot(data, "#chart_ad2_s", "date", "north", x, xAxis, geom));
-    zoomBehaviours.push(drawPlot(data, "#chart_ad2_t", "date", "east", x, xAxis, geom));
-    zoomBehaviours.push(drawPlot(data, "#chart_ad2_p", "date", "up", x, xAxis, geom));
-    cb(null);
-  });
-});
-
-queue.defer(function (cb) {
-  d3.csv("data/itm5adop3.csv", convertData, function(error, data) {
-    if (error) throw error;
-    zoomBehaviours.push(drawPlot(data, "#chart_ad3_s", "date", "north", x, xAxis, geom));
-    zoomBehaviours.push(drawPlot(data, "#chart_ad3_t", "date", "east", x, xAxis, geom));
-    zoomBehaviours.push(drawPlot(data, "#chart_ad3_p", "date", "up", x, xAxis, geom));
-    cb(null);
-  });
-});
-
-queue.defer(function (cb) {
-  d3.csv("data/itm5adop4.csv", convertData, function(error, data) {
-    if (error) throw error;
-    zoomBehaviours.push(drawPlot(data, "#chart_ad4_s", "date", "north", x, xAxis, geom));
-    zoomBehaviours.push(drawPlot(data, "#chart_ad4_t", "date", "east", x, xAxis, geom));
-    zoomBehaviours.push(drawPlot(data, "#chart_ad4_p", "date", "up", x, xAxis, geom));
-    cb(null);
-  });
-});*/
-
-queue.await(function(error) {
-  if (error) throw error;
-
-  var zoom = d3.zoom()
-    .scaleExtent([1, 20])
-    .translateExtent([[0, 0], [width, height]])
-    .extent([[0, 0], [width, height]])
-    .duration(200)
-    .on("zoom", zoomed);
-
-  var zoomRect;
-  for (var i=0; i!=zoomBehaviours.length; i++) {
-    zoomRect = zoomBehaviours[i].zoomRect;
-    zoomRect.call(zoom);
-  }
-
-  function zoomed() {
-    var gX, g, line, x_orig;
-    var t = d3.event.transform;
-    for (var i=0; i!=zoomBehaviours.length; i++) {
-      gX = zoomBehaviours[i].gX;
-      g = zoomBehaviours[i].g;
-      line = zoomBehaviours[i].line;
-      if (i==0) {
-        x_orig = zoomBehaviours[i].x_orig;
-        x.domain(t.rescaleX(x_orig).domain());
+      function parseDate(year, dayNumber) {
+        var hour = Math.floor((dayNumber % 1) * 24);
+        var minute = (((dayNumber % 1) * 24) % 1) * 60;
+        return new Date(year, 0, Math.floor(dayNumber), hour, minute);
       }
-      gX.call(xAxis.scale(x));
-      g.selectAll(".line")
-        .attr("d", line);
-    }
-  }
 
+      function convertData(row) {
+        var name;
+        for (name in row) {
+          row[name] = +row[name];
+        }
+        row.date = parseDate(row.year, row.day);
+        return row;
+      }
 
-});
+      var geom = {width: 600, height: 250,
+                  margin: {top: 20, bottom: 50, left: 80, right: 20}};
+
+      var axSal = createLineAxes(geom, "#axSal", "Salinity (psu)");
+      var axTemp = createLineAxes(geom, "#axTemp", "Temperature (\u00b0C)");
+      var axPres = createLineAxes(geom, "#axPres", "Pressure anomaly (dbar)");
+
+      d3.csv("data/itm5micro1.csv", convertData, function(error, data) {
+        if (error) throw error;
+        addLine(axTemp, data.map(function(d) {
+          return {t: d.date, y: d.temperature};
+        }), "depth150");
+        addLine(axSal, data.map(function(d) {
+          return {t: d.date, y: d.salinity};
+        }), "depth150");
+        var pAvg = d3.mean(data, function(d) {
+          return d.pressure;
+        });
+        addLine(axPres, data.map(function(d) {
+          return {t: d.date, y: d.pressure-pAvg};
+        }), "depth150");
+        rescaleAllLines(axTemp);
+        rescaleAllLines(axSal);
+        rescaleAllLines(axPres);
+      });
+
+      d3.csv("data/itm5micro2.csv", convertData, function(error, data) {
+        if (error) throw error;
+        addLine(axTemp, data.map(function(d) {
+          return {t: d.date, y: d.temperature};
+        }), "depth250");
+        addLine(axSal, data.map(function(d) {
+          return {t: d.date, y: d.salinity};
+        }), "depth250");
+        var pAvg = d3.mean(data, function(d) {
+          return d.pressure;
+        });
+        addLine(axPres, data.map(function(d) {
+          return {t: d.date, y: d.pressure-pAvg};
+        }), "depth250");
+        rescaleAllLines(axTemp);
+        rescaleAllLines(axSal);
+        rescaleAllLines(axPres);
+      });
+
+      d3.csv("data/itm5micro3.csv", convertData, function(error, data) {
+        if (error) throw error;
+        addLine(axTemp, data.map(function(d) {
+          return {t: d.date, y: d.temperature};
+        }), "depth350");
+        addLine(axSal, data.map(function(d) {
+          return {t: d.date, y: d.salinity};
+        }), "depth350");
+        var pAvg = d3.mean(data, function(d) {
+          return d.pressure;
+        });
+        addLine(axPres, data.map(function(d) {
+          return {t: d.date, y: d.pressure-pAvg};
+        }), "depth350");
+        rescaleAllLines(axTemp);
+        rescaleAllLines(axSal);
+        rescaleAllLines(axPres);
+      });
+
+      d3.csv("data/itm5micro4.csv", convertData, function(error, data) {
+        if (error) throw error;
+        addLine(axTemp, data.map(function(d) {
+          return {t: d.date, y: d.temperature};
+        }), "depth500");
+        addLine(axSal, data.map(function(d) {
+          return {t: d.date, y: d.salinity};
+        }), "depth500");
+        var pAvg = d3.mean(data, function(d) {
+          return d.pressure;
+        });
+        addLine(axPres, data.map(function(d) {
+          return {t: d.date, y: d.pressure-pAvg};
+        }), "depth500");
+        rescaleAllLines(axTemp);
+        rescaleAllLines(axSal);
+        rescaleAllLines(axPres);
+      });
+
+      var zoom = d3.zoom()
+        .scaleExtent([1, 20])
+        .translateExtent([[0, 0], [geom.width, geom.height]])
+        .extent([[0, 0], [geom.width, geom.height]])
+        .duration(250)
+        .on("zoom", zoomed);
+
+      var axes = [axSal, axTemp, axPres];
+      var zoomRect;
+      for (var i=0; i!=axes.length; i++) {
+        zoomRect = axes[i].zoomRect;
+        zoomRect.call(zoom);
+      }
 
     </script>
 

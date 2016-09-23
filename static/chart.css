@@ -1,0 +1,103 @@
+body {
+  font-family: Aileron;
+  font-weight: 400;
+}
+
+.axis {
+  font: 10px Aileron;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.line {
+  fill: none;
+}
+
+.center {
+  display: table;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#swatch150,#swatch250,#swatch350,#swatch500 {
+  width: 5em;
+  height: 3em;
+  float: left;
+  text-align: center;
+  font-weight: bold;
+  font-size: 14pt;
+}
+
+#swatch150 {
+  background-color: #018571;
+}
+
+#swatch250 {
+  background-color: #80cdc1;
+}
+
+#swatch350 {
+  background-color: #dfc27d;
+}
+
+#swatch500 {
+  background-color: #a6611a;
+}
+
+div.inactive {
+  opacity: 0.5;
+  border-style: solid;
+  border-width: 1px;
+  border-color: rgba(0, 0, 0, 0);
+}
+
+div.active {
+  opacity: 1.0;
+  border-style: solid;
+  border-width: 1px;
+  border-color: black;
+}
+
+path.inactive {
+  stroke-width: 1.5px;
+}
+
+path.active {
+  stroke-width: 3px;
+  filter: drop-shadow( 1px 1px 1px rgba(128, 128, 128, 0.5) );
+}
+
+.depth150,.depth250,.depth350,.depth500 {
+  /*stroke-width: 1px;*/
+  transition: 0.3s;
+}
+
+.depth150:hover,.depth250:hover,.depth350:hover,.depth500:hover {
+  /*stroke-width: 3px;*/
+}
+
+.depth150 {
+  stroke: #018571;
+}
+
+.depth250 {
+  stroke: #80cdc1;
+}
+
+.depth350 {
+  stroke: #dfc27d;
+}
+
+.depth500 {
+  stroke: #a6611a;
+}
+
+.y,.label {
+  text-anchor: "start";
+}
+
