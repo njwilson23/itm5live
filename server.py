@@ -1,3 +1,4 @@
+import os
 from flask import Flask, send_from_directory, send_file
 
 app = Flask("itm5live", static_url_path="")
@@ -16,4 +17,6 @@ def send_data(filename):
     return send_from_directory("static/data", filename)
 
 if __name__ == "__main__":
+    if not os.path.isdir("static/data"):
+        os.makedirs("static/data")
     app.run(host='0.0.0.0', port=5000)

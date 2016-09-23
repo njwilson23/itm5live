@@ -1,0 +1,85 @@
+data retrieved from ftp://ftp.whoi.edu/whoinet/itpdata/itm5data.zip
+parsing itm5micro3.dat
+parsing itm5rawlocs.dat
+parsing itm5adop1.dat
+parsing itm5micro1.dat
+parsing itm5adop2.dat
+parsing itm5micro2.dat
+parsing itm5micro4.dat
+parsing itm5adop4.dat
+parsing itm5adop3.dat
+2016-09-17 16:17:44,065 - download - INFO - data retrieved from ftp://ftp.whoi.edu/whoinet/itpdata/itm5data.zip
+2016-09-17 16:17:44,066 - download - INFO - parsing itm5micro2.dat
+2016-09-17 16:17:44,088 - download - INFO - parsing itm5micro3.dat
+2016-09-17 16:17:44,105 - download - INFO - parsing itm5rawlocs.dat
+2016-09-17 16:17:44,109 - download - INFO - parsing itm5adop3.dat
+2016-09-17 16:17:44,117 - download - INFO - parsing itm5adop4.dat
+2016-09-17 16:17:44,126 - download - INFO - parsing itm5adop2.dat
+2016-09-17 16:17:44,136 - download - INFO - parsing itm5micro1.dat
+2016-09-17 16:17:44,150 - download - INFO - parsing itm5micro4.dat
+2016-09-17 16:17:44,157 - download - INFO - parsing itm5adop1.dat
+2016-09-18 13:12:00,509 - download - INFO - data retrieved from ftp://ftp.whoi.edu/whoinet/itpdata/itm5data.zip
+2016-09-18 13:12:00,510 - download - INFO - parsing itm5micro2.dat
+2016-09-18 13:12:00,519 - download - INFO - parsing itm5micro1.dat
+2016-09-18 13:12:00,527 - download - INFO - parsing itm5adop4.dat
+2016-09-18 13:12:00,535 - download - INFO - parsing itm5rawlocs.dat
+2016-09-18 13:12:00,536 - download - ERROR - unknown header: '%year day longitude('
+2016-09-18 13:12:00,536 - download - INFO - parsing itm5micro3.dat
+2016-09-18 13:12:00,543 - download - INFO - parsing itm5adop3.dat
+2016-09-18 13:12:00,551 - download - INFO - parsing itm5adop2.dat
+2016-09-18 13:12:00,558 - download - INFO - parsing itm5adop1.dat
+2016-09-18 13:12:00,565 - download - INFO - parsing itm5micro4.dat
+2016-09-19 08:49:45,043 - download - INFO - data retrieved from ftp://ftp.whoi.edu/whoinet/itpdata/itm5data.zip
+2016-09-19 08:49:45,044 - download - INFO - parsing itm5micro1.dat
+2016-09-19 08:49:45,052 - download - INFO - parsing itm5adop3.dat
+2016-09-19 08:49:45,061 - download - INFO - parsing itm5micro3.dat
+2016-09-19 08:49:45,066 - download - INFO - parsing itm5micro4.dat
+2016-09-19 08:49:45,070 - download - INFO - parsing itm5adop2.dat
+2016-09-19 08:49:45,074 - download - INFO - parsing itm5adop4.dat
+2016-09-19 08:49:45,077 - download - INFO - parsing itm5micro2.dat
+2016-09-19 08:49:45,080 - download - INFO - parsing itm5adop1.dat
+2016-09-19 08:49:45,084 - download - INFO - parsing itm5rawlocs.dat
+2016-09-19 08:49:45,085 - download - ERROR - unknown header: '%year day longitude('
+2016-09-19 12:16:39,970 - download - INFO - data retrieved from ftp://ftp.whoi.edu/whoinet/itpdata/itm5data.zip
+2016-09-19 12:16:39,971 - download - INFO - parsing itm5adop2.dat
+2016-09-19 12:16:39,979 - download - INFO - parsing itm5micro1.dat
+2016-09-19 12:16:39,986 - download - INFO - parsing itm5micro4.dat
+2016-09-19 12:16:39,992 - download - INFO - parsing itm5micro3.dat
+2016-09-19 12:16:39,997 - download - INFO - parsing itm5adop3.dat
+2016-09-19 12:16:40,001 - download - INFO - parsing itm5rawlocs.dat
+2016-09-19 12:16:40,001 - download - INFO - parsing itm5adop4.dat
+2016-09-19 12:16:40,006 - download - INFO - parsing itm5micro2.dat
+2016-09-19 12:16:40,009 - download - INFO - parsing itm5adop1.dat
+2016-09-19 12:17:45,848 - download - INFO - data retrieved from ftp://ftp.whoi.edu/whoinet/itpdata/itm5data.zip
+2016-09-19 12:17:45,849 - download - INFO - parsing itm5micro1.dat
+2016-09-19 12:17:45,857 - download - INFO - parsing itm5micro3.dat
+2016-09-19 12:17:45,867 - download - INFO - parsing itm5micro2.dat
+2016-09-19 12:17:45,874 - download - INFO - parsing itm5adop1.dat
+2016-09-19 12:17:45,882 - download - INFO - parsing itm5adop2.dat
+2016-09-19 12:17:45,889 - download - INFO - parsing itm5rawlocs.dat
+2016-09-19 12:17:45,890 - download - WARNING - no data returned from itm5rawlocs.dat
+2016-09-19 12:17:45,890 - download - INFO - parsing itm5adop3.dat
+2016-09-19 12:17:45,896 - download - INFO - parsing itm5adop4.dat
+2016-09-19 12:17:45,902 - download - INFO - parsing itm5micro4.dat
+2016-09-22 11:55:09,563 - download - INFO - data retrieved from ftp://ftp.whoi.edu/whoinet/itpdata/itm5data.zip
+2016-09-22 11:55:09,569 - download - INFO - parsing itm5rawlocs.dat
+2016-09-22 11:55:09,570 - download - WARNING - no data returned from itm5rawlocs.dat
+2016-09-22 11:55:09,570 - download - INFO - parsing itm5adop3.dat
+2016-09-22 11:55:09,580 - download - INFO - parsing itm5adop2.dat
+2016-09-22 11:55:09,589 - download - INFO - parsing itm5micro4.dat
+2016-09-22 11:55:09,596 - download - INFO - parsing itm5micro2.dat
+2016-09-22 11:55:09,603 - download - INFO - parsing itm5adop1.dat
+2016-09-22 11:55:09,613 - download - INFO - parsing itm5micro3.dat
+2016-09-22 11:55:09,618 - download - INFO - parsing itm5adop4.dat
+2016-09-22 11:55:09,625 - download - INFO - parsing itm5micro1.dat
+2016-09-22 17:02:23,146 - download - INFO - data retrieved from ftp://ftp.whoi.edu/whoinet/itpdata/itm5data.zip
+2016-09-22 17:02:23,152 - download - INFO - parsing itm5adop1.dat
+2016-09-22 17:02:23,167 - download - INFO - parsing itm5micro3.dat
+2016-09-22 17:02:23,177 - download - INFO - parsing itm5micro1.dat
+2016-09-22 17:02:23,187 - download - INFO - parsing itm5micro2.dat
+2016-09-22 17:02:23,195 - download - INFO - parsing itm5adop2.dat
+2016-09-22 17:02:23,203 - download - INFO - parsing itm5micro4.dat
+2016-09-22 17:02:23,209 - download - INFO - parsing itm5adop4.dat
+2016-09-22 17:02:23,219 - download - INFO - parsing itm5rawlocs.dat
+2016-09-22 17:02:23,220 - download - WARNING - no data returned from itm5rawlocs.dat
+2016-09-22 17:02:23,220 - download - INFO - parsing itm5adop3.dat
