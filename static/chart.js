@@ -103,7 +103,6 @@ function addLine(ax, data, lineClass) {
   ax.x.domain(ax.xDomain);
   ax.y.domain(ax.yDomain);
   ax.x_.domain(ax.xDomain);
-  console.log(ax.yDomain);
 
   ax.gX.call(ax.xAxis);
   ax.gY.call(ax.yAxis);

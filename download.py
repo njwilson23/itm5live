@@ -10,7 +10,7 @@ import zipfile
 import logging
 import traceback
 
-import psycopg2
+import database
 
 URL = "ftp://ftp.whoi.edu/whoinet/itpdata/itm5data.zip"
 
@@ -145,44 +145,6 @@ def savetocsv(d, dirname="static/data"):
             LOG.error(e)
     return
 
-def update_database(header, rows, dbname="itm5db", user="natw", host="/var/run/postgresql"):
-    conn = psycopg2.connect("dbname=%s user=%s host=%s" % (dbname, user, host))
-    cur = conn.cursor()
-    try:
-        cur.execute("SELECT * FROM itm5 ORDER BY date;")
-        if cur.rowcount != 0:
-            cur.scroll(cur.rowcount-1)
-            result = cur.fetchone()
-        else:
-            result = None
-
-    except Exception as e:
-        traceback.print_exc(e)
-
-    if result is not None:
-        last_date = result[2]
-        new_rows = [row for row in rows if row[0] > last_date]
-    else:
-        new_rows = rows
-
-    LOG.info("adding %d new rows" % len(new_rows))
-    if len(new_rows) == 0:
-        return
-
-    try:
-        expr = ("INSERT INTO itm5 "
-                "("+ ",".join(colname_munger(n) for n in header) +")"
-                " VALUES (" + ",".join(["%s" for _ in range(len(header))]) + ");")
-        cur.executemany(expr, new_rows)
-        conn.commit()
-
-    except Exception as e:
-        conn.rollback();
-        traceback.print_exc(e)
-    finally:
-        cur.close()
-        conn.close()
-
 def colname_munger(name):
     return name.replace("itm5micro", "mc").replace("itm5adop", "ad").replace("_", "")
 
@@ -213,4 +175,4 @@ if __name__ == "__main__":
             r_agg[name.replace(".dat", "_")] = rows_aggregate_hourly(r[name])
 
     header, data = merge_rows(r_agg)
-    update_database(header, data)
+    database.update(header, data)

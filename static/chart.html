@@ -126,6 +126,22 @@
         return row;
       }
 
+      function convertDates(data) {
+        data.forEach(function(d) {
+          d.date = d3.isoParse(d.date);
+        });
+      }
+
+      function filterNulls(d) {
+        var k = Object.keys(d);
+        for (var i=0; i!=k.length; i++) {
+          if (d[k[i]] === null) {
+            return false;
+          }
+        }
+        return true;
+      }
+
       var geom = {width: 600, height: 250,
                   margin: {top: 20, bottom: 50, left: 80, right: 20}};
 
@@ -133,8 +149,13 @@
       var axTemp = createLineAxes(geom, "#axTemp", "Temperature (\u00b0C)");
       var axPres = createLineAxes(geom, "#axPres", "Pressure anomaly (dbar)");
 
-      d3.csv("/data/itm5micro1.csv", convertData, function(error, data) {
+      d3.json("/data/mc1", function(error, data) {
         if (error) throw error;
+        data.forEach(function(d) {
+          d.date = d3.isoParse(d.date);
+        });
+        data = data.filter(filterNulls);
+        console.log(data);
         addLine(axTemp, data.map(function(d) {
           return {t: d.date, y: d.temperature};
         }), "depth150");
@@ -152,8 +173,12 @@
         rescaleAllLines(axPres);
       });
 
-      d3.csv("/data/itm5micro2.csv", convertData, function(error, data) {
+      d3.json("/data/mc2", function(error, data) {
         if (error) throw error;
+        data.forEach(function(d) {
+          d.date = d3.isoParse(d.date);
+        });
+        data = data.filter(filterNulls);
         addLine(axTemp, data.map(function(d) {
           return {t: d.date, y: d.temperature};
         }), "depth250");
@@ -171,8 +196,12 @@
         rescaleAllLines(axPres);
       });
 
-      d3.csv("/data/itm5micro3.csv", convertData, function(error, data) {
+      d3.json("/data/mc3", function(error, data) {
         if (error) throw error;
+        data.forEach(function(d) {
+          d.date = d3.isoParse(d.date);
+        });
+        data = data.filter(filterNulls);
         addLine(axTemp, data.map(function(d) {
           return {t: d.date, y: d.temperature};
         }), "depth350");
@@ -190,8 +219,12 @@
         rescaleAllLines(axPres);
       });
 
-      d3.csv("/data/itm5micro4.csv", convertData, function(error, data) {
+      d3.json("/data/mc4", function(error, data) {
         if (error) throw error;
+        data.forEach(function(d) {
+          d.date = d3.isoParse(d.date);
+        });
+        data = data.filter(filterNulls);
         addLine(axTemp, data.map(function(d) {
           return {t: d.date, y: d.temperature};
         }), "depth500");
