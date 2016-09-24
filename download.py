@@ -1,8 +1,16 @@
+import datetime
+import itertools
+import math
 import os
+import statistics
+import sys
 import urllib.request
-import json
 import zipfile
+
 import logging
+import traceback
+
+import psycopg2
 
 URL = "ftp://ftp.whoi.edu/whoinet/itpdata/itm5data.zip"
 
@@ -37,9 +45,7 @@ def getdatafromWHOI():
     LOG.info("data retrieved from {0}".format(URL))
     return DATA
 
-def dat2csv(d):
-    """ returns a json object with variable names as keys and vectors of
-    variables as values """
+def dat2rows(d):
     s = d.decode("utf-8")
     if "aquadopp" in s[:20]:
         fields = ["year", "day", "pressure", "temperature", "east", "north", "up"]
@@ -51,10 +57,77 @@ def dat2csv(d):
         raise IOError("unknown header: '{0}'".format(s[:20]))
     data = s.split("\n", 2)[2]
     lines = data.split("\n")
-    csvrows = [",".join(fields)]
+    rows = [fields]
     for line in lines[2:]:
-        csvrows.append(",".join(line.split()))
-    return csvrows
+        if (len(line) != 0) and (line[0] != "%"):
+            rows.append(line.split())
+    return rows
+
+def parse_year_day(year, day):
+    return datetime.datetime(year, 1, 1, tzinfo=datetime.timezone.utc) + datetime.timedelta(days=day-1)
+
+def rows_aggregate_hourly(rows):
+    """ create hourly aggregates and insert "date" column into position 2 """
+    aggfields = [f for f in rows[0]]
+    aggfields.insert(2, "date")
+    aggrows = [aggfields]
+
+    year = int(rows[1][0])
+    day = float(rows[1][1])
+    prevdate = parse_year_day(year, day)
+    iprev = 1
+    i = 2
+    while i != len(rows):
+        year = int(rows[i][0])
+        day = float(rows[i][1])
+        date = parse_year_day(year, day)
+        if i == iprev:
+            # reset prevdate after forming aggregate
+            prevdate = date
+        elif (date.hour != prevdate.hour) or (i == len(rows)-1):
+            # aggregate from iprev to i inclusive
+            newrow = []
+            for j in range(len(rows[i])):
+                newrow.append(statistics.mean([float(rows[_i][j]) for _i in range(iprev, i+1)]))
+            newrow.insert(2, datetime.datetime(year, prevdate.month, prevdate.day,
+                                               prevdate.hour, 0, 0,
+                                               tzinfo=datetime.timezone.utc))
+            aggrows.append(newrow)
+            iprev = i+1
+        i += 1
+    return aggrows
+
+def merge_rows(rowdict):
+    dates = [r[2] for r in itertools.chain(*(rows[1:] for rows in rowdict.values()))]
+    dates = list(set(dates))
+    dates.sort()
+
+    mergedfields = ["date"]
+    mergedrows = [[d] for d in dates]
+
+    for prefix, rows in rowdict.items():
+
+        for j, name in enumerate(rows[0]):
+            if name not in ("year", "day", "date"):
+                mergedfields.append(prefix + name)
+
+                idx_ptr = 0
+                row_ptr = 1
+                while True:
+                    if idx_ptr == len(dates):
+                        break
+                    elif row_ptr == len(rows):
+                        break
+                    elif dates[idx_ptr] == rows[row_ptr][2]:
+                        mergedrows[idx_ptr].append(rows[row_ptr][j])
+                        idx_ptr += 1
+                        row_ptr += 1
+                    elif dates[idx_ptr] > rows[row_ptr][2]:
+                        row_ptr += 1
+                    else:
+                        mergedrows[idx_ptr].append(math.nan)
+                        idx_ptr += 1
+    return mergedfields, mergedrows
 
 def savetocsv(d, dirname="static/data"):
     if not os.path.isdir(dirname):
@@ -62,45 +135,53 @@ def savetocsv(d, dirname="static/data"):
     for name in d:
         LOG.info("parsing {0}".format(name))
         try:
-            csvrows = dat2csv(d[name])
-            if csvrows is None:
+            rows = dat2rows(d[name])
+            if rows is None:
                 LOG.warn("no data returned from {0}".format(name))
             else:
                 csvname = name.replace(".dat", ".csv")
                 with open(os.path.join(dirname, csvname), "w") as f:
-                    f.write("\n".join(csvrows))
+                    f.write("\n".join([",".join(r) for r in rows]))
         except Exception as e:
             LOG.error(e)
     return
 
-def dat2json(d):
-    """ returns a json object with variable names as keys and vectors of
-    variables as values """
-    s = d.decode("utf-8")
-    lines = s.split("\n")
-    header = lines[1]
-    fields = header.split()
-    data = [[] for field in fields]
-    for line in lines[2:]:
-        for i, val in enumerate(line.split()):
-            data[i].append(val)
-    datadict = {field:records for field, records in zip(fields, data)}
-    return json.dumps(datadict)
+def update_database(header, rows, dbname="itm5db", user="natw", host="/var/run/postgresql"):
+    conn = psycopg2.connect("dbname=%s user=%s host=%s" % (dbname, user, host))
+    cur = conn.cursor()
+    try:
+        cur.execute("SELECT * FROM itm5 ORDER BY date;")
+        if cur.rowcount != 0:
+            cur.scroll(cur.rowcount-1)
+            result = cur.fetchone()
+        else:
+            result = None
 
+    except Exception as e:
+        traceback.print_exc(e)
 
-def savetojson(d, dirname="static/data"):
-    if not os.path.isdir(dirname):
-        os.mkdir(dirname)
-    for name in d:
-        LOG.info("parsing {0}".format(name))
-        try:
-            j = dat2json(d[name])
-            jsonname = name.replace(".dat", ".json")
-            with open(os.path.join(dirname, jsonname), "w") as f:
-                f.write(j)
-        except Exception as e:
-            LOG.error(e)
-    return
+    if result is not None:
+        last_date = result[2]
+        new_rows = [row for row in rows if row[0] > last_date]
+    else:
+        new_rows = rows
+
+    try:
+        expr = ("INSERT INTO itm5 "
+                "("+ ",".join(colname_munger(n) for n in header) +")"
+                " VALUES (" + ",".join(["%s" for _ in range(len(header))]) + ");")
+        cur.executemany(expr, new_rows)
+        conn.commit()
+
+    except Exception as e:
+        conn.rollback();
+        traceback.print_exc(e)
+    finally:
+        cur.close()
+        conn.close()
+
+def colname_munger(name):
+    return name.replace("itm5micro", "mc").replace("itm5adop", "ad").replace("_", "")
 
 if __name__ == "__main__":
 
@@ -113,7 +194,16 @@ if __name__ == "__main__":
     LOG.addHandler(_handler)
 
     d = getdatafromWHOI()
-    if d is not None:
-        savetocsv(d)
-    else:
-        print("error")
+    if d is None:
+        LOG.error("no data recieved")
+        sys.exit(1)
+
+    savetocsv(d)
+    #r = {}
+    #r_agg = {}
+    #for name in d:
+    #    r[name] = dat2rows(d[name])
+    #    r_agg[name.replace(".dat", "_")] = rows_aggregate_hourly(r[name])
+
+    #header, data = merge_rows(r_agg)
+    #update_database(header, data)
