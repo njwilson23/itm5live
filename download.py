@@ -113,11 +113,10 @@ def merge_rows(rowdict):
 
                 idx_ptr = 0
                 row_ptr = 1
-                while True:
-                    if idx_ptr == len(dates):
-                        break
-                    elif row_ptr == len(rows):
-                        break
+                while idx_ptr != len(dates):
+                    if row_ptr == len(rows):
+                        mergedrows[idx_ptr].append(math.nan)
+                        idx_ptr += 1
                     elif dates[idx_ptr] == rows[row_ptr][2]:
                         mergedrows[idx_ptr].append(rows[row_ptr][j])
                         idx_ptr += 1
@@ -166,6 +165,10 @@ def update_database(header, rows, dbname="itm5db", user="natw", host="/var/run/p
     else:
         new_rows = rows
 
+    LOG.info("adding %d new rows" % len(new_rows))
+    if len(new_rows) == 0:
+        return
+
     try:
         expr = ("INSERT INTO itm5 "
                 "("+ ",".join(colname_munger(n) for n in header) +")"
@@ -198,12 +201,16 @@ if __name__ == "__main__":
         LOG.error("no data recieved")
         sys.exit(1)
 
+    # make a local copy of data
     savetocsv(d)
-    #r = {}
-    #r_agg = {}
-    #for name in d:
-    #    r[name] = dat2rows(d[name])
-    #    r_agg[name.replace(".dat", "_")] = rows_aggregate_hourly(r[name])
 
-    #header, data = merge_rows(r_agg)
-    #update_database(header, data)
+    # update database
+    r = {}
+    r_agg = {}
+    for name in d:
+        r[name] = dat2rows(d[name])
+        if r[name] is not None:
+            r_agg[name.replace(".dat", "_")] = rows_aggregate_hourly(r[name])
+
+    header, data = merge_rows(r_agg)
+    update_database(header, data)
