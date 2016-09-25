@@ -48,6 +48,29 @@ def extract(fields, retfields=None):
     return [{f_:fmt(f, v) for f,f_,v in zip(fields, retfields, record)}
             for record in result]
 
+def update_column(data, dates, colname, log=None):
+    """ given a list of dates and a column of data, update database """
+    cur = CONN.cursor()
+
+    expr_update = "UPDATE itm5 SET {0}=%s WHERE date=%s".format(colname)
+    expr_insert = ("INSERT INTO itm5 (date,{0}) "
+                   "SELECT %s, %s "
+                   "WHERE NOT EXISTS (SELECT 1 FROM itm5 WHERE date=%s)".format(colname))
+
+    try:
+        cur.executemany(expr_update, zip(data, dates))
+        cur.executemany(expr_insert, zip(dates, data, dates))
+        CONN.commit()
+    except Exception as e:
+        CONN.rollback()
+        if log is not None:
+            log.error(colname, e)
+        else:
+            print("error:", colname, e)
+    finally:
+        cur.close()
+    return
+
 def update(header, rows, log=None):
     """ given a list of fields (*header*) and a list of lists of data (*rows*),
     update database with all rows more recent than the last db entry.

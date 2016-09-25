@@ -127,6 +127,17 @@ def merge_rows(rowdict):
                         idx_ptr += 1
     return mergedfields, mergedrows
 
+def split_columns(rows):
+    """ given a list of lists where the first list is column names, return a
+    dictionary where keys are column names and values are data
+    """
+    names = rows[0]
+    data = rows[1:]
+    columns = {}
+    for i, name in enumerate(names):
+        columns[name] = [d[i] for d in data]
+    return columns
+
 def savetocsv(d, dirname="static/data"):
     if not os.path.isdir(dirname):
         os.mkdir(dirname)
@@ -170,5 +181,12 @@ if __name__ == "__main__":
         if r[name] is not None:
             r_agg[name.replace(".dat", "_")] = rows_aggregate_hourly(r[name])
 
-    header, data = merge_rows(r_agg)
-    database.update(header, data, log=LOG)
+    for name in r_agg:
+        prefix = database.colname_munger(name)
+        columns = split_columns(r_agg[name])
+        for colname, data in columns.items():
+            if colname in ("temperature", "salinity", "pressure", "up", "east", "north"):
+                database.update_column(data, columns["date"], prefix+colname, log=LOG)
+
+    #header, data = merge_rows(r_agg)
+    #database.update(header, data, log=LOG)
