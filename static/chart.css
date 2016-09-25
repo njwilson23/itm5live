@@ -24,6 +24,12 @@ body {
   margin-right: auto;
 }
 
+.plotArea {
+  cursor: crosshair;
+  fill: none;
+  pointer-events: all;
+}
+
 #swatch150,#swatch250,#swatch350,#swatch500 {
   width: 5em;
   height: 3em;
@@ -31,6 +37,7 @@ body {
   text-align: center;
   font-weight: bold;
   font-size: 14pt;
+  cursor: pointer;
 }
 
 #swatch150 {

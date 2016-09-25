@@ -50,8 +50,7 @@ function createLineAxes(geom, id, label) {
   var zoomRect = g.append("rect")
     .attr("width", width)
     .attr("height", height)
-    .style("fill", "none")
-    .style("pointer-events", "all");
+    .attr("class", "plotArea");
 
   ax.xDomain = xDomain;
   ax.yDomain = yDomain;
