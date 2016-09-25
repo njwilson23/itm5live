@@ -8,7 +8,6 @@ import urllib.request
 import zipfile
 
 import logging
-import traceback
 
 import database
 
@@ -144,9 +143,6 @@ def savetocsv(d, dirname="static/data"):
         except Exception as e:
             LOG.error(e)
     return
-
-def colname_munger(name):
-    return name.replace("itm5micro", "mc").replace("itm5adop", "ad").replace("_", "")
 
 if __name__ == "__main__":
 

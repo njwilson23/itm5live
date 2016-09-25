@@ -2,6 +2,7 @@ import atexit
 import os
 import math
 import urllib.parse
+import traceback
 import psycopg2
 
 if "DATABASE_URL" in os.environ:
@@ -83,4 +84,7 @@ def update(header, rows, log=None):
         traceback.print_exc(e)
     finally:
         cur.close()
+
+def colname_munger(name):
+    return name.replace("itm5micro", "mc").replace("itm5adop", "ad").replace("_", "")
 
