@@ -43,7 +43,7 @@ def extract(fields, retfields=None):
                              " equal length")
     cur = CONN.cursor()
 
-    cur.execute("SELECT " + ",".join(fields) + " FROM itm5;")
+    cur.execute("SELECT " + ",".join(fields) + " FROM itm5 ORDER BY date;")
     result = cur.fetchall()
     return [{f_:fmt(f, v) for f,f_,v in zip(fields, retfields, record)}
             for record in result]
