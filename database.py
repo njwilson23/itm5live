@@ -27,10 +27,12 @@ atexit.register(CONN.close)
 def fmt(f, v):
     if f == "date":
         return v.isoformat()
-    if math.isnan(v):
-        return None
-    else:
+    try:
+        if math.isnan(float(v)):
+            return None
+    except TypeError:
         return v
+    return v
 
 def extract(fields, retfields=None):
     """ given a list of field (*fields*), return an iterator of dictionaries
