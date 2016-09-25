@@ -54,14 +54,13 @@ def update_column(data, dates, colname, log=None):
     """ given a list of dates and a column of data, update database """
     cur = CONN.cursor()
 
-    expr_update = "UPDATE itm5 SET {0}=%s WHERE date=%s".format(colname)
-    expr_insert = ("INSERT INTO itm5 (date,{0}) "
-                   "SELECT %s, %s "
-                   "WHERE NOT EXISTS (SELECT 1 FROM itm5 WHERE date=%s)".format(colname))
+    expr = ("INSERT INTO itm5 (date, {0}) VALUES (%s, %s) "
+            "ON CONFLICT (date) "
+            "DO UPDATE SET {0}=%s "
+            "WHERE itm5.date=%s".format(colname))
 
     try:
-        cur.executemany(expr_update, zip(data, dates))
-        cur.executemany(expr_insert, zip(dates, data, dates))
+        cur.executemany(expr, list(zip(dates, data, data, dates)))
         CONN.commit()
     except Exception as e:
         CONN.rollback()

@@ -186,6 +186,7 @@ if __name__ == "__main__":
         columns = split_columns(r_agg[name])
         for colname, data in columns.items():
             if colname in ("temperature", "salinity", "pressure", "up", "east", "north"):
+                LOG.info("updating {0}".format(prefix+colname))
                 database.update_column(data, columns["date"], prefix+colname, log=LOG)
 
     #header, data = merge_rows(r_agg)
