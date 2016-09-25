@@ -47,7 +47,7 @@ def extract(fields, retfields=None):
     return [{f_:fmt(f, v) for f,f_,v in zip(fields, retfields, record)}
             for record in result]
 
-def update(header, rows):
+def update(header, rows, log=None):
     """ given a list of fields (*header*) and a list of lists of data (*rows*),
     update database with all rows more recent than the last db entry.
     """
@@ -65,7 +65,9 @@ def update(header, rows):
     else:
         new_rows = rows
 
-    LOG.info("adding %d new rows" % len(new_rows))
+    if log is not None:
+        log.info("adding %d new rows" % len(new_rows))
+
     if len(new_rows) == 0:
         return
 

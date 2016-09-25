@@ -175,4 +175,4 @@ if __name__ == "__main__":
             r_agg[name.replace(".dat", "_")] = rows_aggregate_hourly(r[name])
 
     header, data = merge_rows(r_agg)
-    database.update(header, data)
+    database.update(header, data, log=LOG)
