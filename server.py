@@ -28,6 +28,18 @@ def send_data(filename):
     elif filename == "mc4":
         fields = ["date", "mc4temperature", "mc4salinity", "mc4pressure"]
         retfields = ["date", "temperature", "salinity", "pressure"]
+    elif filename == "ad1":
+        fields = ["date", "ad1temperature", "ad1pressure", "ad1north", "ad1east", "ad1up"]
+        retfields = ["date", "temperature", "pressure", "north", "east", "up"]
+    elif filename == "ad2":
+        fields = ["date", "ad2temperature", "ad2pressure", "ad2north", "ad2east", "ad2up"]
+        retfields = ["date", "temperature", "pressure", "north", "east", "up"]
+    elif filename == "ad3":
+        fields = ["date", "ad3temperature", "ad3pressure", "ad3north", "ad3east", "ad3up"]
+        retfields = ["date", "temperature", "pressure", "north", "east", "up"]
+    elif filename == "ad4":
+        fields = ["date", "ad4temperature", "ad4pressure", "ad4north", "ad4east", "ad4up"]
+        retfields = ["date", "temperature", "pressure", "north", "east", "up"]
     else:
         flask.abort(404)
     return json.dumps(database.extract(fields, retfields))
