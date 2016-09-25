@@ -111,9 +111,7 @@ function addLine(ax, data, lineClass) {
     .y(function(d) { return ax.y(d.y); });
 
   var path = ax.g.append("path")
-    .datum(data.filter(function(d, i) {
-      return (i % 4 == 0);
-    }))
+    .datum(data)
     .attr("class", "line inactive " + lineClass)
     .attr("d", line);
 
