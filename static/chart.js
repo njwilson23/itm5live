@@ -112,7 +112,7 @@ function addLine(ax, data, lineClass) {
 
   var path = ax.g.append("path")
     .datum(data)
-    .attr("class", "line inactive " + lineClass)
+    .attr("class", "line active " + lineClass)
     .attr("d", line);
 
   ax.lines.push(line);
