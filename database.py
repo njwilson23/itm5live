@@ -50,14 +50,14 @@ def extract(fields, retfields=None):
     return [{f_:fmt(f, v) for f,f_,v in zip(fields, retfields, record)}
             for record in result]
 
-def update_column(data, dates, colname, log=None):
+def update_column(tablename, data, dates, colname, log=None):
     """ given a list of dates and a column of data, update database """
     cur = CONN.cursor()
 
-    expr = ("INSERT INTO itm5 (date, {0}) VALUES (%s, %s) "
+    expr = ("INSERT INTO {1} (date, {0}) VALUES (%s, %s) "
             "ON CONFLICT (date) "
             "DO UPDATE SET {0}=%s "
-            "WHERE itm5.date=%s".format(colname))
+            "WHERE {1}.date=%s".format(colname, tablename))
 
     try:
         cur.executemany(expr, list(zip(dates, data, data, dates)))
@@ -71,43 +71,6 @@ def update_column(data, dates, colname, log=None):
     finally:
         cur.close()
     return
-
-def update(header, rows, log=None):
-    """ given a list of fields (*header*) and a list of lists of data (*rows*),
-    update database with all rows more recent than the last db entry.
-    """
-    cur = CONN.cursor()
-    cur.execute("SELECT * FROM itm5 ORDER BY date;")
-    if cur.rowcount != 0:
-        cur.scroll(cur.rowcount-1)
-        result = cur.fetchone()
-    else:
-        result = None
-
-    if result is not None:
-        last_date = result[2]
-        new_rows = [row for row in rows if row[0] > last_date]
-    else:
-        new_rows = rows
-
-    if log is not None:
-        log.info("adding %d new rows" % len(new_rows))
-
-    if len(new_rows) == 0:
-        return
-
-    try:
-        expr = ("INSERT INTO itm5 "
-                "("+ ",".join(colname_munger(n) for n in header) +")"
-                " VALUES (" + ",".join(["%s" for _ in range(len(header))]) + ");")
-        cur.executemany(expr, new_rows)
-        CONN.commit()
-
-    except Exception as e:
-        CONN.rollback();
-        traceback.print_exc(e)
-    finally:
-        cur.close()
 
 def colname_munger(name):
     return name.replace("itm5micro", "mc").replace("itm5adop", "ad").replace("_", "")

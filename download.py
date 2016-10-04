@@ -51,7 +51,7 @@ def dat2rows(d):
     elif "microcat" in s[:20]:
         fields = ["year", "day", "temperature", "salinity", "pressure"]
     elif "longitude" in s[:30]:
-        return None
+        fields = ["year", "day", "longitude", "latitude", "GF", "NSAT", "HDOP"]
     else:
         raise IOError("unknown header: '{0}'".format(s[:20]))
     data = s.split("\n", 2)[2]
@@ -91,6 +91,36 @@ def rows_aggregate_hourly(rows):
             newrow.insert(2, datetime.datetime(year, prevdate.month, prevdate.day,
                                                prevdate.hour, 0, 0,
                                                tzinfo=datetime.timezone.utc))
+            aggrows.append(newrow)
+            iprev = i+1
+        i += 1
+    return aggrows
+
+def rows_aggregate_daily(rows):
+    """ create daily aggregates and insert "date" column into position 2 """
+    aggfields = [f for f in rows[0]]
+    aggfields.insert(2, "date")
+    aggrows = [aggfields]
+
+    year = int(rows[1][0])
+    day = float(rows[1][1])
+    prevdate = parse_year_day(year, day)
+    iprev = 1
+    i = 2
+    while i != len(rows):
+        year = int(rows[i][0])
+        day = float(rows[i][1])
+        date = parse_year_day(year, day)
+        if i == iprev:
+            # reset prevdate after forming aggregate
+            prevdate = date
+        elif (date.day != prevdate.day) or (i == len(rows)-1):
+            # aggregate from iprev to i inclusive
+            newrow = []
+            for j in range(len(rows[i])):
+                newrow.append(statistics.mean([float(rows[_i][j]) for _i in range(iprev, i+1)]))
+            newrow.insert(2, datetime.datetime(year, prevdate.month, prevdate.day,
+                                               0, 0, 0, tzinfo=datetime.timezone.utc))
             aggrows.append(newrow)
             iprev = i+1
         i += 1
@@ -178,16 +208,23 @@ if __name__ == "__main__":
     r_agg = {}
     for name in d:
         r[name] = dat2rows(d[name])
-        if r[name] is not None:
+        if name == "itm5rawlocs.dat":
+            r_agg["positions"] = rows_aggregate_daily(r[name])
+        elif r[name] is not None:
             r_agg[name.replace(".dat", "_")] = rows_aggregate_hourly(r[name])
 
-    for name in r_agg:
-        prefix = database.colname_munger(name)
-        columns = split_columns(r_agg[name])
-        for colname, data in columns.items():
-            if colname in ("temperature", "salinity", "pressure", "up", "east", "north"):
-                LOG.info("updating {0}".format(prefix+colname))
-                database.update_column(data, columns["date"], prefix+colname, log=LOG)
+    for name, rows in r_agg.items():
+        if name == "positions":
+            columns = split_columns(rows)
+            for colname, data in columns.items():
+                if colname in ("longitude", "latitude"):
+                    LOG.info("updating {0}".format(prefix+colname))
+                    database.update_column("geo_itm5", data, columns["date"], colname, log=LOG)
+        else:
+            prefix = database.colname_munger(name)
+            columns = split_columns(rows)
+            for colname, data in columns.items():
+                if colname in ("temperature", "salinity", "pressure", "up", "east", "north"):
+                    LOG.info("updating {0}".format(prefix+colname))
+                    database.update_column("itm5", data, columns["date"], prefix+colname, log=LOG)
 
-    #header, data = merge_rows(r_agg)
-    #database.update(header, data, log=LOG)

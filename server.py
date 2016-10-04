@@ -9,6 +9,10 @@ app = flask.Flask("itm5live", static_url_path="")
 def root():
     return flask.send_file("static/chart.html")
 
+@app.route("/map.html")
+def map():
+    return flask.send_file("static/map.html")
+
 @app.route("/static/<path:filename>")
 def send_static(filename):
     print(filename)
