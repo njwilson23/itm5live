@@ -24,6 +24,10 @@ body {
   margin-right: auto;
 }
 
+.centerText {
+  text-align: center;
+}
+
 .plotArea {
   cursor: grab;
   fill: none;
