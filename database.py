@@ -34,7 +34,7 @@ def fmt(f, v):
         return v
     return v
 
-def extract(fields, retfields=None):
+def extract(table, fields, retfields=None):
     """ given a list of field (*fields*), return an iterator of dictionaries
     containing rows from the db """
     if retfields is None:
@@ -45,7 +45,7 @@ def extract(fields, retfields=None):
                              " equal length")
     cur = CONN.cursor()
 
-    cur.execute("SELECT " + ",".join(fields) + " FROM itm5 ORDER BY date;")
+    cur.execute("SELECT " + ",".join(fields) + " FROM " + table + " ORDER BY date;")
     result = cur.fetchall()
     return [{f_:fmt(f, v) for f,f_,v in zip(fields, retfields, record)}
             for record in result]

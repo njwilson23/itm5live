@@ -18,8 +18,10 @@
     <p class="center"><em>August 23, 2016 &mdash; present</em></p>
     <div class="center" style="width: 70%; max-width: 40em;">
 
-      <p>Charts may be scrolled or zoomed. Click legend items to highlight
-        data. Update attempted every morning at 8 AM UTC.</p>
+      <p>In August 2016, we deployed an ice-tethered mooring in sea ice near the <a href="map.html">floating ice tongue at 79North glacier</a>. This mooring measure temperature and salinity in the ocean water beneath the floating ice tongue. This data will be important for understanding how ocean processes affect glacier behaviour.</p> 
+
+      <p>The data are transmitted from the glacier daily, and are made available at 8 AM UTC via the plots and the links below. The charts may be scrolled or zoomed. Click legend items to highlight
+        data.</p>
 
     </div>
 
@@ -40,14 +42,14 @@
         guarantees regarding their accuracy or suitability for any purpose. The
         data used in the plots above may be downloaded from:<br>
         <div style="padding-left: 5em;">
-          <a href="data/mc1">150 m Microcat</a><br>
-          <a href="data/ad1">150 m Aquadopp</a><br><br>
-          <a href="data/mc2">250 m Microcat</a><br>
-          <a href="data/ad2">250 m Aquadopp</a><br><br>
-          <a href="data/mc3">350 m Microcat</a><br>
-          <a href="data/ad3">350 m Aquadopp</a><br><br>
-          <a href="data/mc4">500 m Microcat</a><br>
-          <a href="data/ad4">500 m Aquadopp</a>
+          <a href="data/mc1.json">150 m Microcat</a><br>
+          <a href="data/ad1.json">150 m Aquadopp</a><br><br>
+          <a href="data/mc2.json">250 m Microcat</a><br>
+          <a href="data/ad2.json">250 m Aquadopp</a><br><br>
+          <a href="data/mc3.json">350 m Microcat</a><br>
+          <a href="data/ad3.json">350 m Aquadopp</a><br><br>
+          <a href="data/mc4.json">500 m Microcat</a><br>
+          <a href="data/ad4.json">500 m Aquadopp</a>
         </div>
       </p>
 
@@ -176,7 +178,7 @@
       var axTemp = createLineAxes(geom, "#axTemp", "Temperature (\u00b0C)");
       var axPres = createLineAxes(geom, "#axPres", "Pressure anomaly (dbar)");
 
-      d3.json("/data/mc1", function(error, data) {
+      d3.json("/data/mc1.json", function(error, data) {
         if (error) throw error;
         data.forEach(function(d) {
           d.date = d3.isoParse(d.date);
@@ -200,7 +202,7 @@
         rescaleAllLines(axPres);
       });
 
-      d3.json("/data/mc2", function(error, data) {
+      d3.json("/data/mc2.json", function(error, data) {
         if (error) throw error;
         data.forEach(function(d) {
           d.date = d3.isoParse(d.date);
@@ -223,7 +225,7 @@
         rescaleAllLines(axPres);
       });
 
-      d3.json("/data/mc3", function(error, data) {
+      d3.json("/data/mc3.json", function(error, data) {
         if (error) throw error;
         data.forEach(function(d) {
           d.date = d3.isoParse(d.date);
@@ -246,7 +248,7 @@
         rescaleAllLines(axPres);
       });
 
-      d3.json("/data/mc4", function(error, data) {
+      d3.json("/data/mc4.json", function(error, data) {
         if (error) throw error;
         data.forEach(function(d) {
           d.date = d3.isoParse(d.date);
