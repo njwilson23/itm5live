@@ -1,4 +1,9 @@
 #map {
     height: 98vh;
+    width: 100%;
     overflow: hidden;
+}
+
+#mooringMap {
+    height: 50vh;
 }

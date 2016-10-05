@@ -57,7 +57,7 @@ body {
 }
 
 div.active,div.inactive {
-  border-radius: 10px;
+  border-radius: 5px;
   margin-left: 0.25em;
   margin-right: 0.25em;
 }

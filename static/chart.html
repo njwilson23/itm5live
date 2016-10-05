@@ -2,7 +2,9 @@
 
   <head>
     <title>79N ITM5LIVE</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.1/dist/leaflet.css" />
     <link rel="stylesheet" href="/static/chart.css">
+    <link rel="stylesheet" href="/static/map.css">
     <link rel="stylesheet" href="https://brick.a.ssl.fastly.net/Aileron:300,400,700,300i">
   </head>
 
@@ -18,7 +20,9 @@
     <p class="center"><em>August 23, 2016 &mdash; present</em></p>
     <div class="center" style="width: 70%; max-width: 40em;">
 
-      <p>In August 2016, we deployed an ice-tethered mooring in sea ice near the <a href="map.html">floating ice tongue at 79North glacier</a>. This mooring measure temperature and salinity in the ocean water beneath the floating ice tongue. This data will be important for understanding how ocean processes affect glacier behaviour.</p> 
+      <p>In August 2016, we deployed an ice-tethered mooring in sea ice near the floating ice tongue at 79North glacier. This mooring measure temperature and salinity in the ocean water beneath the floating ice tongue. This data will be important for understanding how ocean processes affect glacier behaviour.</p>
+
+      <div id="mooringMap"></div>
 
       <p>The data are transmitted from the glacier daily, and are made available at 8 AM UTC via the plots and the links below. The charts may be scrolled or zoomed. Click legend items to highlight
         data.</p>
@@ -58,82 +62,76 @@
     </div>
 
     <script>
-      document.getElementById("swatch150").addEventListener("click", function(event) {
-        var els = document.getElementsByClassName("depth150");
-        var el;
-        if (this.className.includes("inactive")) {
-          this.className = "active";
-        } else {
-          this.className = "inactive";
-        }
-        for (var i=0; i!=els.length; i++) {
-          el = els[i];
-          if (el.classList.contains("active")) {
-            el.classList.remove("active");
-            el.classList.add("inactive");
-          } else {
-            el.classList.remove("inactive");
-            el.classList.add("active");
+      var depths = [150, 250, 350, 500];
+    
+      for (var i=0; i!= depths.length; i++) {
+        var depth = depths[i];
+        document.getElementById("swatch"+depth).addEventListener("click", function(d) {
+          return function(event) {
+            var els = document.getElementsByClassName("depth"+d);
+            var el;
+            this.className = (this.className.includes("inactive")) ? "active" : "inactive";
+            for (var i=0; i!=els.length; i++) {
+              el = els[i];
+              if (el.classList.contains("active")) {
+                el.classList.remove("active");
+                el.classList.add("inactive");
+              } else {
+                el.classList.remove("inactive");
+                el.classList.add("active");
+              }
+            }
           }
-        }
-      });
-      document.getElementById("swatch250").addEventListener("click", function(event) {
-        var els = document.getElementsByClassName("depth250");
-        var el;
-        if (this.className.includes("inactive")) {
-          this.className = "active";
-        } else {
-          this.className = "inactive";
-        }
-        for (var i=0; i!=els.length; i++) {
-          el = els[i];
-          if (el.classList.contains("active")) {
-            el.classList.remove("active");
-            el.classList.add("inactive");
-          } else {
-            el.classList.remove("inactive");
-            el.classList.add("active");
+        }(depth));
+      }
+    </script>
+
+    <script src="https://unpkg.com/leaflet@1.0.1/dist/leaflet.js"></script>
+    <script>
+      var map = L.map('mooringMap').setView([79.67743,-20.39310], 3);
+
+      L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+      }).addTo(map);
+
+      // Get the data
+      var request = new XMLHttpRequest();
+      request.onreadystatechange = function() {
+          if (request.readyState === XMLHttpRequest.DONE) {
+              if (request.status == 200) {
+                  positions = JSON.parse(request.responseText);
+                  var point, lastpoint;
+                  var options;
+                  for (var i=0; i!=positions.length; i++) {
+                      point = positions[i];
+                      options = {
+                          color: "blue",
+                          fillOpacity: 0.3,
+                          stroke: false,
+                          radius: 2
+                      }
+                      if (i == positions.length-1) {
+                          options.color = "red";
+                          options.fillOpacity = 0.8;
+                          options.radius = 5;
+                      }
+                      // Make a mark if it is the final point or it's in a different position than the previous point
+                      if ((i == positions.length-1) || (lastpoint == null)
+                          || ((point.longitude != lastpoint.longitude)
+                          && (point.latitude != lastpoint.latitude))) {
+                          L.circleMarker([point.latitude, point.longitude], options).addTo(map);
+                      }
+                      lastpoint = point;
+                  }
+                  var marker = L.marker([lastpoint.latitude, lastpoint.longitude]).addTo(map);
+                  marker.bindPopup("<b>Last Position</b><br>"+lastpoint.longitude+", "+lastpoint.latitude);
+              } else {
+                  console.log("positions.json not found");
+              }
           }
-        }
-      });
-      document.getElementById("swatch350").addEventListener("click", function(event) {
-        var els = document.getElementsByClassName("depth350");
-        var el;
-        if (this.className.includes("inactive")) {
-          this.className = "active";
-        } else {
-          this.className = "inactive";
-        }
-        for (var i=0; i!=els.length; i++) {
-          el = els[i];
-          if (el.classList.contains("active")) {
-            el.classList.remove("active");
-            el.classList.add("inactive");
-          } else {
-            el.classList.remove("inactive");
-            el.classList.add("active");
-          }
-        }
-      });
-      document.getElementById("swatch500").addEventListener("click", function(event) {
-        var els = document.getElementsByClassName("depth500");
-        var el;
-        if (this.className.includes("inactive")) {
-          this.className = "active";
-        } else {
-          this.className = "inactive";
-        }
-        for (var i=0; i!=els.length; i++) {
-          el = els[i];
-          if (el.classList.contains("active")) {
-            el.classList.remove("active");
-            el.classList.add("inactive");
-          } else {
-            el.classList.remove("inactive");
-            el.classList.add("active");
-          }
-        }
-      });
+      };
+      request.open("GET", "data/positions.json", true);
+      request.send(null);
     </script>
 
     <script src="https://d3js.org/d3.v4.min.js"></script>
@@ -184,7 +182,6 @@
           d.date = d3.isoParse(d.date);
         });
         data = data.filter(filterNulls);
-        console.log(data);
         addLine(axTemp, data.map(function(d) {
           return {t: d.date, y: d.temperature};
         }), "depth150");
