@@ -39,19 +39,19 @@ def send_data(filename):
         table = "itm5"
         fields = ["date", "mc4temperature", "mc4salinity", "mc4pressure"]
         retfields = ["date", "temperature", "salinity", "pressure"]
-    elif filename == "ad1.json":
+    elif filename == "aq1.json":
         table = "itm5"
         fields = ["date", "ad1temperature", "ad1pressure", "ad1north", "ad1east", "ad1up"]
         retfields = ["date", "temperature", "pressure", "north", "east", "up"]
-    elif filename == "ad2.json":
+    elif filename == "aq2.json":
         table = "itm5"
         fields = ["date", "ad2temperature", "ad2pressure", "ad2north", "ad2east", "ad2up"]
         retfields = ["date", "temperature", "pressure", "north", "east", "up"]
-    elif filename == "ad3.json":
+    elif filename == "aq3.json":
         table = "itm5"
         fields = ["date", "ad3temperature", "ad3pressure", "ad3north", "ad3east", "ad3up"]
         retfields = ["date", "temperature", "pressure", "north", "east", "up"]
-    elif filename == "ad4.json":
+    elif filename == "aq4.json":
         table = "itm5"
         fields = ["date", "ad4temperature", "ad4pressure", "ad4north", "ad4east", "ad4up"]
         retfields = ["date", "temperature", "pressure", "north", "east", "up"]
@@ -65,6 +65,4 @@ def send_data(filename):
     #return send_from_directory("static/data", filename)
 
 if __name__ == "__main__":
-    if not os.path.isdir("static/data"):
-        os.makedirs("static/data")
     app.run(host='0.0.0.0', port=5000)
