@@ -29,71 +29,60 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-12">
-          <h1 class="center">79North Data Stream</h1>
-          <p class="center"><em>August 23, 2016 &mdash; present</em></p>
-          <div class="center" style="width: 80%; max-width: 60em;">
+          <div class="displayBlock">
+            <h1 class="centerText">79North Ocean Data</h1>
+            <p class="centerText"><em>August 23, 2016 &mdash; present</em></p>
             <p>In August 2016, we deployed an ice-tethered mooring in sea ice near the floating ice tongue at 79North glacier. This mooring measure temperature and salinity in the ocean water beneath the floating ice tongue. This data will be important for understanding how ocean processes affect glacier behaviour.</p>
+
+            <p>The data are transmitted from the glacier daily, and are made available at 8 AM UTC via the plots and the links below.</p>
+
+            <h2>Map</h2>
             <div id="mooringMap"></div>
-            <p>The data are transmitted from the glacier daily, and are made available at 8 AM UTC via the plots and the links below. The charts may be scrolled or zoomed. Click legend items to highlight
-              data.</p>
           </div>
         </div>
       </div> <!-- row -->
 
       <div class="row">
-        <div class="col-sm-12 col-md-3 center">
-          <div class="row center">
+        <div class="col-sm-12 col-md-12">
+          <div class="displayBlock">
+            <h2>Charts</h2>
+            <p>Charts may be zoomed or scrolled.</p>
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-3">
+          <div class="row">
             <div class="col-xs-6 col-sm-3 col-md-6 col-lg-12"><div id="swatch150" class="button active"><p>150 m</p></div></div>
             <div class="col-xs-6 col-sm-3 col-md-6 col-lg-12"><div id="swatch250" class="button active"><p>250 m</p></div></div>
             <div class="col-xs-6 col-sm-3 col-md-6 col-lg-12"><div id="swatch350" class="button active"><p>350 m</p></div></div>
             <div class="col-xs-6 col-sm-3 col-md-6 col-lg-12"><div id="swatch500" class="button active"><p>500 m</p></div></div>
+            <p>Use the controls above to toggle data in the charts</p>
           </div>
         </div>
         <div class="col-sm-12 col-md-9" id="chartColumn">
-          <div class="center">
-            <div id="axTemp" class="chart"></div>
-            <div id="axSal" class="chart"></div>
-            <div id="axPres" class="chart"></div>
-          </div>
+          <div id="axTemp" class="chart"></div>
+          <div id="axSal" class="chart"></div>
+          <div id="axPres" class="chart"></div>
+          <p><em>Aquadopp plots coming soon.</em></p>
         </div>
       </div> <!-- row -->
 
       <div class="row">
-        <div class="col-md-12">
-          <div class="center" style="width: 80%; max-width: 60em;">
-            <p>All data are preliminary at this stage and provided without any guarantees regarding their accuracy or suitability for any purpose. The data used in the plots above may be downloaded from:</p>
-          </div>
-        </div>
-      </div> <!-- row -->
+        <div class="displayBlock">
+          <h2>Data</h2>
+          <p>All data are preliminary at this stage and provided without any guarantees regarding their accuracy or suitability for any purpose. The data used in the plots above may be downloaded in JSON format below.</p>
 
-      <div class="row">
-        <div class="col-sm-12 col-md-1"></div>
-        <div class="col-sm-6 col-md-2 centerText">
-          <a href="data/mc1.json">150 m Microcat</a><br>
-          <a href="data/ad1.json">150 m Aquadopp</a>
-        </div>
-        <div class="col-sm-6 col-md-2 centerText">
-          <a href="data/mc2.json">250 m Microcat</a><br>
-          <a href="data/ad2.json">250 m Aquadopp</a>
-        </div>
-        <div class="col-sm-6 col-md-2 centerText">
-          <a href="data/mc3.json">350 m Microcat</a><br>
-          <a href="data/ad3.json">350 m Aquadopp</a>
-        </div>
-        <div class="col-sm-6 col-md-2 centerText">
-          <a href="data/mc4.json">500 m Microcat</a><br>
-          <a href="data/ad4.json">500 m Aquadopp</a>
-        </div>
-        <div class="col-sm-12 col-md-1"></div>
-      </div> <!-- row -->
-      <div class="row">
-        <div class="col-md-12">
-          <div class="center"  style="width: 80%; max-width: 60em;">
-            <p>Aquadopp plots coming soon.</p>
+          <div class="buttonContainer">
+            <a href="data/mc1.json"><div class="button">500 m Microcat</div></a>
+            <a href="data/mc2.json"><div class="button">350 m Microcat</div></a>
+            <a href="data/mc3.json"><div class="button">250 m Microcat</div></a>
+            <a href="data/mc4.json"><div class="button">150 m Microcat</div></a>
+            <a href="data/ad1.json"><div class="button">500 m Aquadopp</div></a>
+            <a href="data/ad2.json"><div class="button">350 m Aquadopp</div></a>
+            <a href="data/ad3.json"><div class="button">250 m Aquadopp</div></a>
+            <a href="data/ad4.json"><div class="button">150 m Aquadopp</div></a>
           </div>
         </div>
       </div> <!-- row -->
-    </div> <!-- container -->
 
     <script>
       // Behaviour for buttons that toggle lines
