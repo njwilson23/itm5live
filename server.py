@@ -18,6 +18,10 @@ def send_static(filename):
     print(filename)
     return flask.send_from_directory("static", filename)
 
+@app.route("/css/<path:filename>")
+def css(filename):
+    return flask.send_from_directory("css", filename)
+
 @app.route("/data/<path:filename>")
 def send_data(filename):
     if filename == "mc1.json":

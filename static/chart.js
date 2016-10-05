@@ -69,7 +69,7 @@ function createLineAxes(geom, id, label) {
   return ax;
 }
 
-/* given and axex object, add a line */
+/* given and axes object, add a line */
 function addLine(ax, data, lineClass) {
 
   var xExtent = d3.extent(data, function(d) { return d.t; }),

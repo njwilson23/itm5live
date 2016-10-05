@@ -1,11 +1,21 @@
-<html>
-
+<!DOCTYPE html>
+<html lang="en">
   <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>79N ITM5LIVE</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://brick.a.ssl.fastly.net/Aileron:300,400,700,300i">
     <link rel="stylesheet" href="/static/chart.css">
     <link rel="stylesheet" href="/static/map.css">
-    <link rel="stylesheet" href="https://brick.a.ssl.fastly.net/Aileron:300,400,700,300i">
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
   </head>
 
   <body>
@@ -16,70 +26,93 @@
       }
     </style>
 
-    <h1 class="center">79North Data Stream</h1>
-    <p class="center"><em>August 23, 2016 &mdash; present</em></p>
-    <div class="center" style="width: 70%; max-width: 40em;">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12">
+          <h1 class="center">79North Data Stream</h1>
+          <p class="center"><em>August 23, 2016 &mdash; present</em></p>
+          <div class="center" style="width: 80%; max-width: 60em;">
+            <p>In August 2016, we deployed an ice-tethered mooring in sea ice near the floating ice tongue at 79North glacier. This mooring measure temperature and salinity in the ocean water beneath the floating ice tongue. This data will be important for understanding how ocean processes affect glacier behaviour.</p>
+            <div id="mooringMap"></div>
+            <p>The data are transmitted from the glacier daily, and are made available at 8 AM UTC via the plots and the links below. The charts may be scrolled or zoomed. Click legend items to highlight
+              data.</p>
+          </div>
+        </div>
+      </div> <!-- row -->
 
-      <p>In August 2016, we deployed an ice-tethered mooring in sea ice near the floating ice tongue at 79North glacier. This mooring measure temperature and salinity in the ocean water beneath the floating ice tongue. This data will be important for understanding how ocean processes affect glacier behaviour.</p>
+      <div class="row">
+        <div class="col-md-3 center">
+          <div class="row">
+            <div class="col-md-6"><div id="swatch150" class="button active"><p>150 m</p></div></div>
+            <div class="col-md-6"><div id="swatch250" class="button active"><p>250 m</p></div></div>
+            <div class="col-md-6"><div id="swatch350" class="button active"><p>350 m</p></div></div>
+            <div class="col-md-6"><div id="swatch500" class="button active"><p>500 m</p></div></div>
+          </div>
+        </div>
+        <div class="col-md-9">
+          <div class="center">
+            <div id="axTemp" class="chart"></div>
+            <div id="axSal" class="chart"></div>
+            <div id="axPres" class="chart"></div>
+          </div>
+        </div>
+      </div> <!-- row -->
 
-      <div id="mooringMap"></div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="center" style="width: 80%; max-width: 60em;">
+            <p>All data are preliminary at this stage and provided without any guarantees regarding their accuracy or suitability for any purpose. The data used in the plots above may be downloaded from:</p>
+          </div>
+        </div>
+      </div> <!-- row -->
 
-      <p>The data are transmitted from the glacier daily, and are made available at 8 AM UTC via the plots and the links below. The charts may be scrolled or zoomed. Click legend items to highlight
-        data.</p>
-
-    </div>
-
-    <div id="key" class="center">
-      <div id="swatch150" class="active"><p>150 m</p></div>
-      <div id="swatch250" class="active"><p>250 m</p></div>
-      <div id="swatch350" class="active"><p>350 m</p></div>
-      <div id="swatch500" class="active"><p>500 m</p></div>
-      <br style="clear: left;">
-    </div>
-    <div id="axTemp" class="chart center"></div>
-    <div id="axSal" class="chart center"></div>
-    <div id="axPres" class="chart center"></div>
-
-    <div class="center" style="width: 70%; max-width: 40em;">
-
-      <p>All data are preliminary at this stage and provided without any
-        guarantees regarding their accuracy or suitability for any purpose. The
-        data used in the plots above may be downloaded from:<br>
-        <div style="padding-left: 5em;">
+      <div class="row">
+        <div class="col-md-3">
           <a href="data/mc1.json">150 m Microcat</a><br>
-          <a href="data/ad1.json">150 m Aquadopp</a><br><br>
+          <a href="data/ad1.json">150 m Aquadopp</a>
+        </div>
+        <div class="col-md-3">
           <a href="data/mc2.json">250 m Microcat</a><br>
-          <a href="data/ad2.json">250 m Aquadopp</a><br><br>
+          <a href="data/ad2.json">250 m Aquadopp</a>
+        </div>
+        <div class="col-md-3">
           <a href="data/mc3.json">350 m Microcat</a><br>
-          <a href="data/ad3.json">350 m Aquadopp</a><br><br>
+          <a href="data/ad3.json">350 m Aquadopp</a>
+        </div>
+        <div class="col-md-3">
           <a href="data/mc4.json">500 m Microcat</a><br>
           <a href="data/ad4.json">500 m Aquadopp</a>
         </div>
-      </p>
-
-      <p>Aquadopp plots coming soon.</p>
-
-    </div>
+      </div> <!-- row -->
+      <div class="row">
+        <div class="col-md-12">
+          <p>Aquadopp plots coming soon.</p>
+        </div>
+      </div> <!-- row -->
+    </div> <!-- container -->
 
     <script>
+      // Behaviour for buttons that toggle lines
       var depths = [150, 250, 350, 500];
     
+      function toggleActive(el) {
+        if (el.classList.contains("active")) {
+          el.classList.remove("active");
+          el.classList.add("inactive");
+        } else if (el.classList.contains("inactive")) {
+          el.classList.remove("inactive");
+          el.classList.add("active");
+        }
+      }
+
       for (var i=0; i!= depths.length; i++) {
         var depth = depths[i];
         document.getElementById("swatch"+depth).addEventListener("click", function(d) {
           return function(event) {
             var els = document.getElementsByClassName("depth"+d);
-            var el;
-            this.className = (this.className.includes("inactive")) ? "active" : "inactive";
+            toggleActive(this);
             for (var i=0; i!=els.length; i++) {
-              el = els[i];
-              if (el.classList.contains("active")) {
-                el.classList.remove("active");
-                el.classList.add("inactive");
-              } else {
-                el.classList.remove("inactive");
-                el.classList.add("active");
-              }
+              toggleActive(els[i]);
             }
           }
         }(depth));
@@ -88,6 +121,7 @@
 
     <script src="https://unpkg.com/leaflet@1.0.1/dist/leaflet.js"></script>
     <script>
+      // Map behaviour
       var map = L.map('mooringMap').setView([79.67743,-20.39310], 3);
 
       L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
@@ -137,7 +171,7 @@
     <script src="https://d3js.org/d3.v4.min.js"></script>
     <script src="/static/chart.js"></script>
     <script>
-
+      // Chart behaviour
       function parseDate(year, dayNumber) {
         var hour = Math.floor((dayNumber % 1) * 24);
         var minute = (((dayNumber % 1) * 24) % 1) * 60;
