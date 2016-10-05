@@ -39,7 +39,7 @@ div.button {
 
 div.active,div.inactive {
   width: 90%;
-  min-width: 7em;
+  min-width: 6em;
   max-width: 15em;
   margin-left: 0.25em;
   margin-right: 0.25em;
