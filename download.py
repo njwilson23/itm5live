@@ -218,7 +218,7 @@ if __name__ == "__main__":
             columns = split_columns(rows)
             for colname, data in columns.items():
                 if colname in ("longitude", "latitude"):
-                    LOG.info("updating {0}".format(prefix+colname))
+                    LOG.info("updating {0}".format(colname))
                     database.update_column("geo_itm5", data, columns["date"], colname, log=LOG)
         else:
             prefix = database.colname_munger(name)
