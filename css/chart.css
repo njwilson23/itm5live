@@ -1,0 +1,33 @@
+.axis {
+  font: 10px Aileron;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.line {
+  fill: none;
+}
+
+.y,.label {
+  text-anchor: "start";
+}
+
+.plotArea {
+  cursor: grab;
+  fill: none;
+  pointer-events: all;
+}
+
+path.inactive {
+  stroke-width: 1px;
+  opacity: 0.1;
+}
+
+path.active {
+  stroke-width: 1.5px;
+}
