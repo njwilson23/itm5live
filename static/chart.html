@@ -120,9 +120,8 @@
         zoom: 2
       });
 
-      L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-          attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-      }).addTo(map);
+      L.tileLayer('https://api.mapbox.com/styles/v1/natw/citx2wgx8008e2inxol5t89px/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoibmF0dyIsImEiOiJjaWtrZzNsOTIwYjdrdWNqN2s1Y2g5Y3B0In0.ioaXcCRzjmSHpkaoQ4Oq4g')
+        .addTo(map);
 
       // Get the data
       var request = new XMLHttpRequest();
@@ -163,9 +162,9 @@
       request.open("GET", "data/positions.json", true);
       request.send(null);
 
-      map.flyTo([79.67743,-20.39310], 6, {
+      map.flyTo([79.67743,-20.39310], 10, {
         animate: true,
-        duration: 4.0
+        duration: 3.0
       });
 
     </script>
