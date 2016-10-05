@@ -18,6 +18,10 @@ body {
   fill: none;
 }
 
+.y,.label {
+  text-anchor: "start";
+}
+
 .center {
   display: table;
   margin-left: auto;
@@ -48,22 +52,6 @@ div.button {
   cursor: pointer;
 }
 
-#swatch150 {
-  background-color: #018571;
-}
-
-#swatch250 {
-  background-color: #80cdc1;
-}
-
-#swatch350 {
-  background-color: #dfc27d;
-}
-
-#swatch500 {
-  background-color: #a6611a;
-}
-
 div.active,div.inactive {
   border-radius: 5px;
   margin-left: 0.25em;
@@ -91,35 +79,40 @@ path.inactive {
 
 path.active {
   stroke-width: 1.5px;
-  /*filter: drop-shadow( 1px 1px 1px rgba(128, 128, 128, 0.5) );*/
 }
 
 .depth150,.depth250,.depth350,.depth500 {
-  /*stroke-width: 1px;*/
-  transition: 0.3s;
-}
-
-.depth150:hover,.depth250:hover,.depth350:hover,.depth500:hover {
-  /*stroke-width: 3px;*/
+  transition: 0.2s;
 }
 
 .depth150 {
-  stroke: #018571;
+  stroke: #a6cee3;
 }
 
 .depth250 {
-  stroke: #80cdc1;
+  stroke: #1f78b4;
 }
 
 .depth350 {
-  stroke: #dfc27d;
+  stroke: #b2df8a;
 }
 
 .depth500 {
-  stroke: #a6611a;
+  stroke: #33a02c;
 }
 
-.y,.label {
-  text-anchor: "start";
+#swatch150 {
+  background-color: #a6cee3;
 }
 
+#swatch250 {
+  background-color: #1f78b4;
+}
+
+#swatch350 {
+  background-color: #b2df8a;
+}
+
+#swatch500 {
+  background-color: #33a02c;
+}
