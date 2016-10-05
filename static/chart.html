@@ -174,27 +174,6 @@
     <script src="/static/chart.js"></script>
     <script>
       // Chart behaviour
-      function parseDate(year, dayNumber) {
-        var hour = Math.floor((dayNumber % 1) * 24);
-        var minute = (((dayNumber % 1) * 24) % 1) * 60;
-        return new Date(year, 0, Math.floor(dayNumber), hour, minute);
-      }
-
-      function convertData(row) {
-        var name;
-        for (name in row) {
-          row[name] = +row[name];
-        }
-        row.date = parseDate(row.year, row.day);
-        return row;
-      }
-
-      function convertDates(data) {
-        data.forEach(function(d) {
-          d.date = d3.isoParse(d.date);
-        });
-      }
-
       function filterNulls(d) {
         var k = Object.keys(d);
         for (var i=0; i!=k.length; i++) {
