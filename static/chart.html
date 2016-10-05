@@ -41,15 +41,15 @@
       </div> <!-- row -->
 
       <div class="row">
-        <div class="col-md-3 center">
-          <div class="row">
-            <div class="col-md-6"><div id="swatch150" class="button active"><p>150 m</p></div></div>
-            <div class="col-md-6"><div id="swatch250" class="button active"><p>250 m</p></div></div>
-            <div class="col-md-6"><div id="swatch350" class="button active"><p>350 m</p></div></div>
-            <div class="col-md-6"><div id="swatch500" class="button active"><p>500 m</p></div></div>
+        <div class="col-sm-12 col-md-3 center">
+          <div class="row center">
+            <div class="col-xs-6 col-sm-3 col-md-6 col-lg-12"><div id="swatch150" class="button active"><p>150 m</p></div></div>
+            <div class="col-xs-6 col-sm-3 col-md-6 col-lg-12"><div id="swatch250" class="button active"><p>250 m</p></div></div>
+            <div class="col-xs-6 col-sm-3 col-md-6 col-lg-12"><div id="swatch350" class="button active"><p>350 m</p></div></div>
+            <div class="col-xs-6 col-sm-3 col-md-6 col-lg-12"><div id="swatch500" class="button active"><p>500 m</p></div></div>
           </div>
         </div>
-        <div class="col-md-9">
+        <div class="col-sm-12 col-md-9">
           <div class="center">
             <div id="axTemp" class="chart"></div>
             <div id="axSal" class="chart"></div>
@@ -67,26 +67,28 @@
       </div> <!-- row -->
 
       <div class="row">
-        <div class="col-md-3">
+        <div class="col-sm-6 col-md-3">
           <a href="data/mc1.json">150 m Microcat</a><br>
           <a href="data/ad1.json">150 m Aquadopp</a>
         </div>
-        <div class="col-md-3">
+        <div class="col-sm-6 col-md-3">
           <a href="data/mc2.json">250 m Microcat</a><br>
           <a href="data/ad2.json">250 m Aquadopp</a>
         </div>
-        <div class="col-md-3">
+        <div class="col-sm-6 col-md-3">
           <a href="data/mc3.json">350 m Microcat</a><br>
           <a href="data/ad3.json">350 m Aquadopp</a>
         </div>
-        <div class="col-md-3">
+        <div class="col-sm-6 col-md-3">
           <a href="data/mc4.json">500 m Microcat</a><br>
           <a href="data/ad4.json">500 m Aquadopp</a>
         </div>
       </div> <!-- row -->
       <div class="row">
         <div class="col-md-12">
-          <p>Aquadopp plots coming soon.</p>
+          <div class="center"  style="width: 80%; max-width: 60em;">
+            <p>Aquadopp plots coming soon.</p>
+          </div>
         </div>
       </div> <!-- row -->
     </div> <!-- container -->
@@ -122,7 +124,10 @@
     <script src="https://unpkg.com/leaflet@1.0.1/dist/leaflet.js"></script>
     <script>
       // Map behaviour
-      var map = L.map('mooringMap').setView([79.67743,-20.39310], 3);
+      var map = L.map('mooringMap', {
+        center: [40, -75],
+        zoom: 2
+      });
 
       L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
           attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
@@ -166,6 +171,12 @@
       };
       request.open("GET", "data/positions.json", true);
       request.send(null);
+
+      map.flyTo([79.67743,-20.39310], 6, {
+        animate: true,
+        duration: 4.0
+      });
+
     </script>
 
     <script src="https://d3js.org/d3.v4.min.js"></script>
