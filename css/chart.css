@@ -11,6 +11,11 @@
 
 .line {
   fill: none;
+  stroke-width: 1.5;
+}
+
+line {
+  stroke-width: 2;
 }
 
 .y,.label {
@@ -23,11 +28,10 @@
   pointer-events: all;
 }
 
-path.inactive {
-  stroke-width: 1px;
-  opacity: 0.1;
+g.inactive,path.inactive {
+  opacity: 0.0;
 }
 
-path.active {
-  stroke-width: 1.5px;
+g.active,path.active {
+  opacity: 1.0;
 }

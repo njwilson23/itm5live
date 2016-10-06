@@ -65,18 +65,22 @@ div.active {
 
 .depth150 {
   stroke: #a6cee3;
+  fill: #a6cee3;
 }
 
 .depth250 {
   stroke: #1f78b4;
+  fill:  #1f78b4;
 }
 
 .depth350 {
   stroke: #b2df8a;
+  fill:  #b2df8a;
 }
 
 .depth500 {
   stroke: #33a02c;
+  fill:  #33a02c;
 }
 
 #swatch150 {

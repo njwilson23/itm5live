@@ -22,7 +22,7 @@
   <body>
 
     <style>
-      .line {
+      .line,.vec {
         clip-path: url(#clip);
       }
     </style>
@@ -63,7 +63,7 @@
           <div id="axTemp" class="chart"></div>
           <div id="axSal" class="chart"></div>
           <div id="axPres" class="chart"></div>
-          <p><em>Aquadopp plots coming soon.</em></p>
+          <div id="axCurrent" class="chart"></div>
         </div>
       </div> <!-- row -->
 
@@ -282,18 +282,85 @@
         rescaleAxes(axPres);
       });
 
+      var axCurrent = createTimeSeriesAxes(geom, "#axCurrent", "Current velocity (cm/s)");
+
+      d3.json("/data/aq1.json", function(error, data) {
+          if (error) throw error;
+          data.forEach(function(d) {
+              d.date = d3.isoParse(d.date);
+          });
+          data = data.filter(filterNulls).map(movingAverage).filter(reduce);
+          addVectorTimeSeries(axCurrent, data.map(function(d) {
+              var v = normalizeVec(100*d.east, 100*d.north);
+              return {t: d.date, y: v.mag, vx: 20*v.u, vy: 20*v.v};
+          }), "depth150");
+          rescaleAxes(axCurrent);
+      });
+      d3.json("/data/aq2.json", function(error, data) {
+          if (error) throw error;
+          data.forEach(function(d) {
+              d.date = d3.isoParse(d.date);
+          });
+          data = data.filter(filterNulls).map(movingAverage).filter(reduce);
+          addVectorTimeSeries(axCurrent, data.map(function(d) {
+              var v = normalizeVec(100*d.east, 100*d.north);
+              return {t: d.date, y: v.mag, vx: 20*v.u, vy: 20*v.v};
+          }), "depth250");
+          rescaleAxes(axCurrent);
+      });
+      d3.json("/data/aq3.json", function(error, data) {
+          if (error) throw error;
+          data.forEach(function(d) {
+              d.date = d3.isoParse(d.date);
+          });
+          data = data.filter(filterNulls).map(movingAverage).filter(reduce);
+          addVectorTimeSeries(axCurrent, data.map(function(d) {
+              var v = normalizeVec(100*d.east, 100*d.north);
+              return {t: d.date, y: v.mag, vx: 20*v.u, vy: 20*v.v};
+          }), "depth350");
+          rescaleAxes(axCurrent);
+      });
+      d3.json("/data/aq4.json", function(error, data) {
+          if (error) throw error;
+          data.forEach(function(d) {
+              d.date = d3.isoParse(d.date);
+          });
+          data = data.filter(filterNulls).map(movingAverage).filter(reduce);
+          addVectorTimeSeries(axCurrent, data.map(function(d) {
+              var v = normalizeVec(100*d.east, 100*d.north);
+              return {t: d.date, y: v.mag, vx: 20*v.u, vy: 20*v.v};
+          }), "depth500");
+          rescaleAxes(axCurrent);
+      });
+
+
       var zoom = d3.zoom()
         .scaleExtent([1, 20])
         .translateExtent([[0, 0], [geom.width, geom.height]])
         .extent([[0, 0], [geom.width, geom.height]])
-        .duration(250)
         .on("zoom", zoomed);
 
-      var axes = [axSal, axTemp, axPres];
+      var axes = [axSal, axTemp, axPres, axCurrent];
       var zoomRect;
       for (var i=0; i!=axes.length; i++) {
         zoomRect = axes[i].zoomRect;
         zoomRect.call(zoom);
+      }
+
+      function movingAverage(d, i, data) {
+        var imin = Math.max(0, i-3);
+        var imax = Math.min(data.length, i+4) 
+        var u = 0;
+        var v = 0;
+        for (var i=imin; i!=imax; i++) {
+          u += data[i].east;
+          v += data[i].north;
+        }
+        return {date: d.date, east: u / (imax-imin+1), north: v / (imax-imin+1)};
+      }
+
+      function reduce(d, i) {
+        return (i%6==0); 
       }
 
     </script>

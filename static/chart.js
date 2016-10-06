@@ -65,12 +65,12 @@ function createTimeSeriesAxes(geom, id, label) {
   ax.xAxis = xAxis;
   ax.yAxis = yAxis;
   ax.zoomRect = zoomRect;
-  ax.series = [];   // Make this a map
+  ax.series = d3.map();
   return ax;
 }
 
 /* given and axes object, add a line */
-function addScalarTimeSeries(ax, data, lineClass) {
+function addScalarTimeSeries(ax, data, className) {
 
   var xExtent = d3.extent(data, function(d) { return d.t; }),
       yExtent = d3.extent(data, function(d) { return d.y; });
@@ -110,16 +110,15 @@ function addScalarTimeSeries(ax, data, lineClass) {
     .x(function(d) { return ax.x(d.t); })
     .y(function(d) { return ax.y(d.y); });
 
-  var path = ax.g.append("path")
-    .datum(data)
-    .attr("class", "line active " + lineClass)
+  var path = ax.g.append("path").datum(data)
+    .attr("class", "line active " + className)
     .attr("d", line);
 
-  ax.series.push(line);
+  ax.series.set(className, line);
   return {"path": path, "line": line};
 }
 
-function addVectorTimeSeries(ax, data, dataClass) {
+function addVectorTimeSeries(ax, data, className) {
 
   var xExtent = d3.extent(data, function(d) { return d.t; }),
       yExtent = d3.extent(data, function(d) { return d.y; });
@@ -143,9 +142,9 @@ function addVectorTimeSeries(ax, data, dataClass) {
   }
 
   if (isFinite(ax.yDomain[1])) {
-    ax.yDomain[1] = Math.max(yExtent[1], ax.yDomain[1]);
+    ax.yDomain[1] = Math.max(yExtent[1], ax.yDomain[1], 5);
   } else {
-    ax.yDomain[1] = yExtent[1];
+    ax.yDomain[1] = Math.max(yExtent[1], 5);
   }
 
   ax.x.domain(ax.xDomain);
@@ -155,44 +154,75 @@ function addVectorTimeSeries(ax, data, dataClass) {
   ax.gX.call(ax.xAxis);
   ax.gY.call(ax.yAxis);
 
-  var vecs = ax.g.selectAll(".vec")
-    .data(data);
+  var g = ax.g.append("g").attr("class", "active " + className);
 
-  vecs.enter().append("line")
-      .attr("x1", function(d) {return ax.x(d.t)})
-      .attr("y1", function(d) {return ax.y(d.y)})
-      .attr("x2", function(d) {return ax.x(d.t)+d.vx})
-      .attr("y2", function(d) {return ax.y(d.y)+d.vy})
-      .style("stroke-width", 1)
-      .style("stroke", "black")
-    .merge(vecs);
+  var line = g.selectAll("line")
+      .data(data);
 
-  vecs.exit().remove();
+  line.enter()
+      .append("line")
+      .attr("x1", function(d) { return ax.x(d.t) })
+      .attr("y1", function(d) { return ax.y(d.y) })
+      .attr("x2", function(d) { return ax.x(d.t)+d.vx })
+      .attr("y2", function(d) { return ax.y(d.y)+d.vy })
+      .attr("class", "vec "+className)
+    .merge(line);
+
+  var circle = g.selectAll("circle")
+      .data(data);
+
+  circle.enter().append("circle")
+      .attr("cx", function(d) {return ax.x(d.t)})
+      .attr("cy", function(d) {return ax.y(d.y)})
+      .attr("r", 1.8)
+      .attr("class", "vec active "+className)
+    .merge(circle);
 }
 
 function rescaleAxes(ax) {
   ax.g.selectAll(".line")
-    .attr("d", ax.series[0]);
+    .attr("d", ax.series.values()[0]);
+
+  ax.g.selectAll("circle.vec")
+    .attr("cx", function(d) {
+      return ax.x(d.t);
+    });
+
+  ax.g.selectAll("line.vec")
+    .attr("x1", function(d) {
+      return ax.x(d.t);
+    })
+    .attr("x2", function(d) {
+      var v = normalizeVec(100*d.east, 100*d.north);
+      return ax.x(d.t)+d.vx;
+    });
 }
 
 function zoomed() {
-  var ax,
-      t = d3.event.transform;
+  var ax, t = d3.event.transform;
   for (var i=0; i!=axes.length; i++) {
     ax = axes[i];
     ax.x.domain(t.rescaleX(ax.x_).domain());
     ax.gX.call(ax.xAxis.scale(ax.x));
-    ax.g.selectAll(".line")
-      .attr("d", ax.series[0]);
+    rescaleAxes(ax);
   }
 }
 
 function filterNulls(d) {
-    var k = Object.keys(d);
-    for (var i=0; i!=k.length; i++) {
-        if (d[k[i]] === null) {
-        return false;
-        }
-    }
-    return true;
+  var k = Object.keys(d);
+  for (var i=0; i!=k.length; i++) {
+      if (d[k[i]] === null) {
+      return false;
+      }
+  }
+  return true;
+}
+
+function normalizeVec(u, v) {
+      var mag = Math.sqrt(u*u + v*v);
+      if (mag == 0) {
+          return {mag: mag, u: 0, v: 0};
+      } else {
+          return {mag: mag, u: u/mag, v: v/mag};
+      }
 }
