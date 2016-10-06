@@ -173,24 +173,15 @@
     <script src="https://d3js.org/d3.v4.min.js"></script>
     <script src="/static/chart.js"></script>
     <script>
-      // Chart behaviour
-      function filterNulls(d) {
-        var k = Object.keys(d);
-        for (var i=0; i!=k.length; i++) {
-          if (d[k[i]] === null) {
-            return false;
-          }
-        }
-        return true;
-      }
+      // Update charts
 
       var colWidth = Math.max(document.getElementById("chartColumn").offsetWidth, 300);
       var geom = {width: colWidth-125, height: 250,
                   margin: {top: 20, bottom: 50, left: 80, right: 20}};
 
-      var axSal = createLineAxes(geom, "#axSal", "Salinity (psu)");
-      var axTemp = createLineAxes(geom, "#axTemp", "Temperature (\u00b0C)");
-      var axPres = createLineAxes(geom, "#axPres", "Pressure anomaly (dbar)");
+      var axSal = createTimeSeriesAxes(geom, "#axSal", "Salinity (psu)");
+      var axTemp = createTimeSeriesAxes(geom, "#axTemp", "Temperature (\u00b0C)");
+      var axPres = createTimeSeriesAxes(geom, "#axPres", "Pressure anomaly (dbar)");
 
       function setLastUpdate(d) {
         var el = document.getElementById("lastUpdate");
@@ -205,21 +196,21 @@
         });
         setLastUpdate(data[data.length-1]);
         data = data.filter(filterNulls);
-        addLine(axTemp, data.map(function(d) {
+        addScalarTimeSeries(axTemp, data.map(function(d) {
           return {t: d.date, y: d.temperature};
         }), "depth150");
-        addLine(axSal, data.map(function(d) {
+        addScalarTimeSeries(axSal, data.map(function(d) {
           return {t: d.date, y: d.salinity};
         }), "depth150");
         var pAvg = d3.mean(data, function(d) {
           return d.pressure;
         });
-        addLine(axPres, data.map(function(d) {
+        addScalarTimeSeries(axPres, data.map(function(d) {
           return {t: d.date, y: d.pressure-pAvg};
         }), "depth150");
-        rescaleAllLines(axTemp);
-        rescaleAllLines(axSal);
-        rescaleAllLines(axPres);
+        rescaleAxes(axTemp);
+        rescaleAxes(axSal);
+        rescaleAxes(axPres);
       });
 
       d3.json("/data/mc2.json", function(error, data) {
@@ -228,21 +219,21 @@
           d.date = d3.isoParse(d.date);
         });
         data = data.filter(filterNulls);
-        addLine(axTemp, data.map(function(d) {
+        addScalarTimeSeries(axTemp, data.map(function(d) {
           return {t: d.date, y: d.temperature};
         }), "depth250");
-        addLine(axSal, data.map(function(d) {
+        addScalarTimeSeries(axSal, data.map(function(d) {
           return {t: d.date, y: d.salinity};
         }), "depth250");
         var pAvg = d3.mean(data, function(d) {
           return d.pressure;
         });
-        addLine(axPres, data.map(function(d) {
+        addScalarTimeSeries(axPres, data.map(function(d) {
           return {t: d.date, y: d.pressure-pAvg};
         }), "depth250");
-        rescaleAllLines(axTemp);
-        rescaleAllLines(axSal);
-        rescaleAllLines(axPres);
+        rescaleAxes(axTemp);
+        rescaleAxes(axSal);
+        rescaleAxes(axPres);
       });
 
       d3.json("/data/mc3.json", function(error, data) {
@@ -251,21 +242,21 @@
           d.date = d3.isoParse(d.date);
         });
         data = data.filter(filterNulls);
-        addLine(axTemp, data.map(function(d) {
+        addScalarTimeSeries(axTemp, data.map(function(d) {
           return {t: d.date, y: d.temperature};
         }), "depth350");
-        addLine(axSal, data.map(function(d) {
+        addScalarTimeSeries(axSal, data.map(function(d) {
           return {t: d.date, y: d.salinity};
         }), "depth350");
         var pAvg = d3.mean(data, function(d) {
           return d.pressure;
         });
-        addLine(axPres, data.map(function(d) {
+        addScalarTimeSeries(axPres, data.map(function(d) {
           return {t: d.date, y: d.pressure-pAvg};
         }), "depth350");
-        rescaleAllLines(axTemp);
-        rescaleAllLines(axSal);
-        rescaleAllLines(axPres);
+        rescaleAxes(axTemp);
+        rescaleAxes(axSal);
+        rescaleAxes(axPres);
       });
 
       d3.json("/data/mc4.json", function(error, data) {
@@ -274,21 +265,21 @@
           d.date = d3.isoParse(d.date);
         });
         data = data.filter(filterNulls);
-        addLine(axTemp, data.map(function(d) {
+        addScalarTimeSeries(axTemp, data.map(function(d) {
           return {t: d.date, y: d.temperature};
         }), "depth500");
-        addLine(axSal, data.map(function(d) {
+        addScalarTimeSeries(axSal, data.map(function(d) {
           return {t: d.date, y: d.salinity};
         }), "depth500");
         var pAvg = d3.mean(data, function(d) {
           return d.pressure;
         });
-        addLine(axPres, data.map(function(d) {
+        addScalarTimeSeries(axPres, data.map(function(d) {
           return {t: d.date, y: d.pressure-pAvg};
         }), "depth500");
-        rescaleAllLines(axTemp);
-        rescaleAllLines(axSal);
-        rescaleAllLines(axPres);
+        rescaleAxes(axTemp);
+        rescaleAxes(axSal);
+        rescaleAxes(axPres);
       });
 
       var zoom = d3.zoom()

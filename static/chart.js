@@ -1,5 +1,5 @@
 
-function createLineAxes(geom, id, label) {
+function createTimeSeriesAxes(geom, id, label) {
   var ax = Object();
 
   var margin = geom.margin,
@@ -65,12 +65,12 @@ function createLineAxes(geom, id, label) {
   ax.xAxis = xAxis;
   ax.yAxis = yAxis;
   ax.zoomRect = zoomRect;
-  ax.lines = [];
+  ax.series = [];   // Make this a map
   return ax;
 }
 
 /* given and axes object, add a line */
-function addLine(ax, data, lineClass) {
+function addScalarTimeSeries(ax, data, lineClass) {
 
   var xExtent = d3.extent(data, function(d) { return d.t; }),
       yExtent = d3.extent(data, function(d) { return d.y; });
@@ -115,21 +115,64 @@ function addLine(ax, data, lineClass) {
     .attr("class", "line active " + lineClass)
     .attr("d", line);
 
-  ax.lines.push(line);
+  ax.series.push(line);
   return {"path": path, "line": line};
 }
 
-function rescaleAllLines(ax) {
+function addVectorTimeSeries(ax, data, dataClass) {
+
+  var xExtent = d3.extent(data, function(d) { return d.t; }),
+      yExtent = d3.extent(data, function(d) { return d.y; });
+
+  if (isFinite(ax.xDomain[0])) {
+    ax.xDomain[0] = Math.min(xExtent[0], ax.xDomain[0]);
+  } else {
+    ax.xDomain[0] = xExtent[0];
+  }
+
+  if (isFinite(ax.xDomain[1])) {
+    ax.xDomain[1] = Math.max(xExtent[1], ax.xDomain[1]);
+  } else {
+    ax.xDomain[1] = xExtent[1];
+  }
+
+  if (isFinite(ax.yDomain[0])) {
+    ax.yDomain[0] = Math.min(yExtent[0], ax.yDomain[0]);
+  } else {
+    ax.yDomain[0] = yExtent[0];
+  }
+
+  if (isFinite(ax.yDomain[1])) {
+    ax.yDomain[1] = Math.max(yExtent[1], ax.yDomain[1]);
+  } else {
+    ax.yDomain[1] = yExtent[1];
+  }
+
+  ax.x.domain(ax.xDomain);
+  ax.y.domain(ax.yDomain);
+  ax.x_.domain(ax.xDomain);
+
+  ax.gX.call(ax.xAxis);
+  ax.gY.call(ax.yAxis);
+
+  var vecs = ax.g.selectAll(".vec")
+    .data(data);
+
+  vecs.enter().append("line")
+      .attr("x1", function(d) {return ax.x(d.t)})
+      .attr("y1", function(d) {return ax.y(d.y)})
+      .attr("x2", function(d) {return ax.x(d.t)+d.vx})
+      .attr("y2", function(d) {return ax.y(d.y)+d.vy})
+      .style("stroke-width", 1)
+      .style("stroke", "black")
+    .merge(vecs);
+
+  vecs.exit().remove();
+}
+
+function rescaleAxes(ax) {
   ax.g.selectAll(".line")
-    .attr("d", ax.lines[0]);
-}
-
-function createVectorAxes(geom, label) {
-
-}
-
-function addVectors(ax, data) {
-
+    .attr("d", ax.series[0]);
 }
 
 function zoomed() {
@@ -140,7 +183,16 @@ function zoomed() {
     ax.x.domain(t.rescaleX(ax.x_).domain());
     ax.gX.call(ax.xAxis.scale(ax.x));
     ax.g.selectAll(".line")
-      .attr("d", ax.lines[0]);
+      .attr("d", ax.series[0]);
   }
 }
 
+function filterNulls(d) {
+    var k = Object.keys(d);
+    for (var i=0; i!=k.length; i++) {
+        if (d[k[i]] === null) {
+        return false;
+        }
+    }
+    return true;
+}
