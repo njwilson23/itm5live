@@ -108,6 +108,10 @@
             for (var i=0; i!=els.length; i++) {
               toggleActive(els[i]);
             }
+            tightenVecY(axCurrent);
+            tightenScaY(axTemp);
+            tightenScaY(axSal);
+            tightenScaY(axPres);
           }
         }(depth));
       }
@@ -211,6 +215,9 @@
         rescaleAxes(axTemp);
         rescaleAxes(axSal);
         rescaleAxes(axPres);
+        tightenScaY(axTemp);
+        tightenScaY(axSal);
+        tightenScaY(axPres);
       });
 
       d3.json("/data/mc2.json", function(error, data) {
@@ -234,6 +241,9 @@
         rescaleAxes(axTemp);
         rescaleAxes(axSal);
         rescaleAxes(axPres);
+        tightenScaY(axTemp);
+        tightenScaY(axSal);
+        tightenScaY(axPres);
       });
 
       d3.json("/data/mc3.json", function(error, data) {
@@ -257,6 +267,9 @@
         rescaleAxes(axTemp);
         rescaleAxes(axSal);
         rescaleAxes(axPres);
+        tightenScaY(axTemp);
+        tightenScaY(axSal);
+        tightenScaY(axPres);
       });
 
       d3.json("/data/mc4.json", function(error, data) {
@@ -280,6 +293,9 @@
         rescaleAxes(axTemp);
         rescaleAxes(axSal);
         rescaleAxes(axPres);
+        tightenScaY(axTemp);
+        tightenScaY(axSal);
+        tightenScaY(axPres);
       });
 
       var axCurrent = createTimeSeriesAxes(geom, "#axCurrent", "Current velocity (cm/s)");
@@ -295,6 +311,7 @@
               return {t: d.date, y: v.mag, vx: 20*v.u, vy: 20*v.v};
           }), "depth150");
           rescaleAxes(axCurrent);
+          tightenVecY(axCurrent);
       });
       d3.json("/data/aq2.json", function(error, data) {
           if (error) throw error;
@@ -307,6 +324,7 @@
               return {t: d.date, y: v.mag, vx: 20*v.u, vy: 20*v.v};
           }), "depth250");
           rescaleAxes(axCurrent);
+          tightenVecY(axCurrent);
       });
       d3.json("/data/aq3.json", function(error, data) {
           if (error) throw error;
@@ -319,6 +337,7 @@
               return {t: d.date, y: v.mag, vx: 20*v.u, vy: 20*v.v};
           }), "depth350");
           rescaleAxes(axCurrent);
+          tightenVecY(axCurrent);
       });
       d3.json("/data/aq4.json", function(error, data) {
           if (error) throw error;
@@ -331,6 +350,7 @@
               return {t: d.date, y: v.mag, vx: 20*v.u, vy: 20*v.v};
           }), "depth500");
           rescaleAxes(axCurrent);
+          tightenVecY(axCurrent);
       });
 
 

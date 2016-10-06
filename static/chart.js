@@ -1,4 +1,4 @@
-
+// Create a set of axes for time series data
 function createTimeSeriesAxes(geom, id, label) {
   var ax = Object();
 
@@ -6,7 +6,7 @@ function createTimeSeriesAxes(geom, id, label) {
       width = geom.width,
       height = geom.height;
 
-  /* Define an original time scale to use when rescaling the actual time scale */
+  // Define an original time scale to use when rescaling the actual time scale
   var x = d3.scaleTime().range([0, width]),
       y = d3.scaleLinear().range([height, 0]),
       x_orig = d3.scaleTime().range([0, width]);
@@ -69,11 +69,9 @@ function createTimeSeriesAxes(geom, id, label) {
   return ax;
 }
 
-/* given and axes object, add a line */
+// Add scalar time series data to a set of axes
 function addScalarTimeSeries(ax, data, className) {
-
-  var xExtent = d3.extent(data, function(d) { return d.t; }),
-      yExtent = d3.extent(data, function(d) { return d.y; });
+  var xExtent = d3.extent(data, function(d) { return d.t; });
 
   if (isFinite(ax.xDomain[0])) {
     ax.xDomain[0] = Math.min(xExtent[0], ax.xDomain[0]);
@@ -87,24 +85,10 @@ function addScalarTimeSeries(ax, data, className) {
     ax.xDomain[1] = xExtent[1];
   }
 
-  if (isFinite(ax.yDomain[0])) {
-    ax.yDomain[0] = Math.min(yExtent[0], ax.yDomain[0]);
-  } else {
-    ax.yDomain[0] = yExtent[0];
-  }
-
-  if (isFinite(ax.yDomain[1])) {
-    ax.yDomain[1] = Math.max(yExtent[1], ax.yDomain[1]);
-  } else {
-    ax.yDomain[1] = yExtent[1];
-  }
-
   ax.x.domain(ax.xDomain);
-  ax.y.domain(ax.yDomain);
   ax.x_.domain(ax.xDomain);
 
   ax.gX.call(ax.xAxis);
-  ax.gY.call(ax.yAxis);
 
   var line = d3.line()
     .x(function(d) { return ax.x(d.t); })
@@ -118,10 +102,9 @@ function addScalarTimeSeries(ax, data, className) {
   return {"path": path, "line": line};
 }
 
+// Add vector time series data to a set of axes
 function addVectorTimeSeries(ax, data, className) {
-
-  var xExtent = d3.extent(data, function(d) { return d.t; }),
-      yExtent = d3.extent(data, function(d) { return d.y; });
+  var xExtent = d3.extent(data, function(d) { return d.t; });
 
   if (isFinite(ax.xDomain[0])) {
     ax.xDomain[0] = Math.min(xExtent[0], ax.xDomain[0]);
@@ -135,24 +118,10 @@ function addVectorTimeSeries(ax, data, className) {
     ax.xDomain[1] = xExtent[1];
   }
 
-  if (isFinite(ax.yDomain[0])) {
-    ax.yDomain[0] = Math.min(yExtent[0], ax.yDomain[0]);
-  } else {
-    ax.yDomain[0] = yExtent[0];
-  }
-
-  if (isFinite(ax.yDomain[1])) {
-    ax.yDomain[1] = Math.max(yExtent[1], ax.yDomain[1], 5);
-  } else {
-    ax.yDomain[1] = Math.max(yExtent[1], 5);
-  }
-
   ax.x.domain(ax.xDomain);
-  ax.y.domain(ax.yDomain);
   ax.x_.domain(ax.xDomain);
 
   ax.gX.call(ax.xAxis);
-  ax.gY.call(ax.yAxis);
 
   var g = ax.g.append("g").attr("class", "active " + className);
 
@@ -179,6 +148,49 @@ function addVectorTimeSeries(ax, data, className) {
     .merge(circle);
 }
 
+// Adjust the Y-scale on an axes to match the limits of active scalar data
+function tightenScaY(ax) {
+  var data = ax.g.selectAll("path.active").data()
+  var vmin = null; vmax = null;
+  var _vmin, _vmax;
+  for (var i=0; i!=data.length; i++) {
+    _vmin = d3.min(data[i], function(d) { return d.y; })
+    _vmax = d3.max(data[i], function(d) { return d.y; })
+    vmin = vmin === null ? _vmin : Math.min(_vmin, vmin);
+    vmax = vmax === null ? _vmax : Math.max(_vmax, vmax);
+  }
+  ax.yDomain[0] = vmin;
+  ax.yDomain[1] = vmax;
+  ax.y.domain(ax.yDomain);
+  ax.gY.call(ax.yAxis.scale(ax.y));
+
+  ax.g.selectAll("path.active").attr("d", ax.series.values()[0]);
+}
+
+// Adjust the Y-scale on an axes to match the limits of active vector data
+function tightenVecY(ax) {
+  var data = ax.g.selectAll("circle.active").data()
+  ax.yDomain[0] = Math.max(0, d3.min(data, function(d) { return d.y-1; }));
+  ax.yDomain[1] = d3.max(data, function(d) { return d.y+1; });
+  ax.y.domain(ax.yDomain);
+  ax.gY.call(ax.yAxis.scale(ax.y));
+
+  ax.g.selectAll("circle.vec")
+    .attr("cy", function(d) {
+      return ax.y(d.y);
+    });
+
+  ax.g.selectAll("line.vec")
+    .attr("y1", function(d) {
+      return ax.y(d.y);
+    })
+    .attr("y2", function(d) {
+      var v = normalizeVec(100*d.east, 100*d.north);
+      return ax.y(d.y)+d.vy;
+    });
+}
+
+// Adjust the horizontal coodinates of data to match axes scales
 function rescaleAxes(ax) {
   ax.g.selectAll(".line")
     .attr("d", ax.series.values()[0]);
@@ -208,6 +220,7 @@ function zoomed() {
   }
 }
 
+// Filter function that detects rows in data with any nulls
 function filterNulls(d) {
   var k = Object.keys(d);
   for (var i=0; i!=k.length; i++) {
@@ -218,6 +231,7 @@ function filterNulls(d) {
   return true;
 }
 
+// Compute the magnitude and unit vector of a vector
 function normalizeVec(u, v) {
       var mag = Math.sqrt(u*u + v*v);
       if (mag == 0) {
