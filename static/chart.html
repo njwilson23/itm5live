@@ -45,6 +45,8 @@
 
             <p>The data are transmitted from the glacier daily and made available via the plots and the links below.</p>
 
+            <h1 id="loadIndicator">LOADING</h1>
+
             <h2>Map</h2>
             <div id="mooringMap"></div>
           </div>
@@ -58,7 +60,7 @@
             <p>Charts may be zoomed or scrolled.</p>
           </div>
         </div>
-        <div class="col-sm-12 col-md-3">
+        <div class="col-sm-12 col-md-3" id="sideControls">
           <div class="row">
             <div class="col-xs-6 col-sm-3 col-md-6 col-lg-12"><div id="swatch150" class="button active"><p>150 m</p></div></div>
             <div class="col-xs-6 col-sm-3 col-md-6 col-lg-12"><div id="swatch250" class="button active"><p>250 m</p></div></div>
@@ -78,7 +80,7 @@
       <div class="row">
         <div class="displayBlock">
           <h2>Data</h2>
-          <p>All data are preliminary at this stage and provided without any guarantees regarding their accuracy or suitability for any purpose. The data used in the plots above may be downloaded in JSON format below.</p>
+          <p>All data are preliminary at this stage and provided without any guarantees regarding their accuracy or suitability for any purpose. The data used in the plots above may be downloaded in JSON format below. Prior to using these data please contact the authors, <a href="fstraneo@whoi.edu">F. Straneo</a> and <a href="mailto:natw@fortyninemaps.com">N. Wilson</a>.</p>
 
           <div class="buttonContainer">
             <a href="data/mc1.json"><div class="button">150 m Microcat</div></a>
@@ -96,7 +98,7 @@
     <script>
       // Behaviour for buttons that toggle lines
       var depths = [150, 250, 350, 500];
-    
+
       function toggleActive(el) {
         if (el.classList.contains("active")) {
           el.classList.remove("active");
@@ -206,7 +208,12 @@
         data.forEach(function(d) {
           d.date = d3.isoParse(d.date);
         });
+
         setLastUpdate(data[data.length-1]);
+
+        var el = document.getElementById("loadIndicator");
+        el.parentNode.removeChild(el);
+
         data = data.filter(filterNulls);
         addScalarTimeSeries(axTemp, data.map(function(d) {
           return {t: d.date, y: d.temperature};
@@ -388,7 +395,7 @@
       }
 
       function reduce(d, i) {
-        return (i%6==0); 
+        return (i%6==0);
       }
 
     </script>

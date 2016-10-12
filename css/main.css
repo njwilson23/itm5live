@@ -4,6 +4,17 @@ body {
   font-size: 12pt;
 }
 
+#loadIndicator {
+  color: firebrick;
+}
+
+@media(min-width: 992px) {
+  #sideControls {
+    position: sticky;
+    top: 5px;
+  }
+}
+
 .centerText {
   text-align: center;
 }
