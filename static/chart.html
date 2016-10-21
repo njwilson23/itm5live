@@ -143,7 +143,7 @@
       request.onreadystatechange = function() {
           if (request.readyState === XMLHttpRequest.DONE) {
               if (request.status == 200) {
-                  positions = JSON.parse(request.responseText);
+                  positions = transpose(JSON.parse(request.responseText));
                   var point, lastpoint;
                   var options;
                   for (var i=0; i!=positions.length; i++) {
@@ -168,7 +168,7 @@
                       lastpoint = point;
                   }
                   var marker = L.marker([lastpoint.latitude, lastpoint.longitude]).addTo(map);
-                  marker.bindPopup("<b>Last Position</b><br>"+lastpoint.longitude+", "+lastpoint.latitude);
+                  marker.bindPopup("<b>Last Position</b><br>"+lastpoint.longitude+", "+lastpoint.latitude+"<br>"+lastpoint.date);
               } else {
                   console.log("positions.json not found");
               }
@@ -203,8 +203,9 @@
         el.innerHTML = d.date.toLocaleString();
       }
 
-      d3.json("/data/mc1.json", function(error, data) {
+      d3.json("/data/mc1.json", function(error, _data) {
         if (error) throw error;
+        var data = transpose(_data);
         data.forEach(function(d) {
           d.date = d3.isoParse(d.date);
         });
@@ -235,8 +236,9 @@
         tightenScaY(axPres);
       });
 
-      d3.json("/data/mc2.json", function(error, data) {
+      d3.json("/data/mc2.json", function(error, _data) {
         if (error) throw error;
+        var data = transpose(_data);
         data.forEach(function(d) {
           d.date = d3.isoParse(d.date);
         });
@@ -261,8 +263,9 @@
         tightenScaY(axPres);
       });
 
-      d3.json("/data/mc3.json", function(error, data) {
+      d3.json("/data/mc3.json", function(error, _data) {
         if (error) throw error;
+        var data = transpose(_data);
         data.forEach(function(d) {
           d.date = d3.isoParse(d.date);
         });
@@ -287,8 +290,9 @@
         tightenScaY(axPres);
       });
 
-      d3.json("/data/mc4.json", function(error, data) {
+      d3.json("/data/mc4.json", function(error, _data) {
         if (error) throw error;
+        var data = transpose(_data);
         data.forEach(function(d) {
           d.date = d3.isoParse(d.date);
         });
@@ -315,8 +319,9 @@
 
       var axCurrent = createTimeSeriesAxes(geom, "#axCurrent", "Current velocity (cm/s)");
 
-      d3.json("/data/aq1.json", function(error, data) {
+      d3.json("/data/aq1.json", function(error, _data) {
           if (error) throw error;
+          var data = transpose(_data);
           data.forEach(function(d) {
               d.date = d3.isoParse(d.date);
           });
@@ -328,8 +333,9 @@
           rescaleAxes(axCurrent);
           tightenVecY(axCurrent);
       });
-      d3.json("/data/aq2.json", function(error, data) {
+      d3.json("/data/aq2.json", function(error, _data) {
           if (error) throw error;
+          var data = transpose(_data);
           data.forEach(function(d) {
               d.date = d3.isoParse(d.date);
           });
@@ -341,8 +347,9 @@
           rescaleAxes(axCurrent);
           tightenVecY(axCurrent);
       });
-      d3.json("/data/aq3.json", function(error, data) {
+      d3.json("/data/aq3.json", function(error, _data) {
           if (error) throw error;
+          var data = transpose(_data);
           data.forEach(function(d) {
               d.date = d3.isoParse(d.date);
           });
@@ -354,8 +361,9 @@
           rescaleAxes(axCurrent);
           tightenVecY(axCurrent);
       });
-      d3.json("/data/aq4.json", function(error, data) {
+      d3.json("/data/aq4.json", function(error, _data) {
           if (error) throw error;
+          var data = transpose(_data);
           data.forEach(function(d) {
               d.date = d3.isoParse(d.date);
           });

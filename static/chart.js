@@ -240,3 +240,28 @@ function normalizeVec(u, v) {
           return {mag: mag, u: u/mag, v: v/mag};
       }
 }
+
+// Given an object containing arrays mapped to column names, return an Array containing row objects
+// If the columns are of unequal length, pad the shorter ones with null
+function transpose(obj) {
+  var properties = Object.keys(obj);
+  var outArr = Array();
+  var L = 0;
+  var prop;
+  for (var k=0; k!=properties.length; k++) {
+    L = Math.max(obj[properties[k]].length);
+  }
+  for (var i=0; i!=L; i++) {
+    var row = Object();
+    for (var k=0; k!=properties.length; k++) {
+      prop = properties[k]
+      if (obj[prop].length > i) {
+        row[prop] = obj[properties[k]][i];
+      } else {
+        row[prop] = null;
+      }
+    }
+    outArr.push(row);
+  }
+  return outArr;
+}

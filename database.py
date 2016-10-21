@@ -47,8 +47,11 @@ def extract(table, fields, retfields=None):
 
     cur.execute("SELECT " + ",".join(fields) + " FROM " + table + " ORDER BY date;")
     result = cur.fetchall()
-    return [{f_:fmt(f, v) for f,f_,v in zip(fields, retfields, record)}
-            for record in result]
+    retdict = {k:[] for k in retfields}
+    for record in result:
+        for f, rf, v in zip(fields, retfields, record):
+            retdict[rf].append(fmt(f, v))
+    return retdict
 
 def update_column(tablename, data, dates, colname, log=None):
     """ given a list of dates and a column of data, update database """
