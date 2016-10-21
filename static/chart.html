@@ -5,8 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>79N ITM5LIVE</title>
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/leaflet.css" />
     <link rel="stylesheet" href="https://brick.a.ssl.fastly.net/Aileron:300,400,700,300i">
     <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="/css/chart.css">
@@ -25,6 +25,7 @@
       ga('create', 'UA-47441592-4', 'auto');
       ga('send', 'pageview');
     </script>
+    <script src="/js/leaflet.js"></script>
     <script src="/js/itm5live.min.js"></script>
   </head>
 
@@ -126,10 +127,7 @@
           }
         }(depth));
       }
-    </script>
 
-    <script src="https://unpkg.com/leaflet@1.0.1/dist/leaflet.js"></script>
-    <script>
       // Map behaviour
       var map = L.map('mooringMap', {
         center: [40, -75],
@@ -139,7 +137,7 @@
       L.tileLayer('https://api.mapbox.com/styles/v1/natw/citx2wgx8008e2inxol5t89px/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoibmF0dyIsImEiOiJjaWtrZzNsOTIwYjdrdWNqN2s1Y2g5Y3B0In0.ioaXcCRzjmSHpkaoQ4Oq4g')
         .addTo(map);
 
-      // Get the data
+      // Get the map data
       var request = new XMLHttpRequest();
       request.onreadystatechange = function() {
           if (request.readyState === XMLHttpRequest.DONE) {
@@ -183,11 +181,6 @@
         duration: 3.0
       });
 
-    </script>
-
-    <!--<script src="/js/d3.v4.js"></script>
-    <script src="/js/chart.js"></script>-->
-    <script>
       // Update charts
 
       var colWidth = Math.max(document.getElementById("chartColumn").offsetWidth, 300);

@@ -1,5 +1,5 @@
 import {select, event, min, max, extent, line as d3line, map, json, isoParse, mean as d3mean, zoom, scaleTime, scaleLinear, axisBottom, axisLeft} from "d3";
-export {json, isoParse, zoom, d3mean}
+export {json, isoParse, zoom, d3mean};
 
 // Create a set of axes for time series data
 export function createTimeSeriesAxes(geom, id, label) {
