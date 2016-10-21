@@ -161,7 +161,7 @@
                       // Make a mark if it is the final point or it's in a different position than the previous point
                       if ((i == positions.length-1) || (lastpoint == null)
                           || ((point.longitude != lastpoint.longitude)
-                          && (point.latitude != lastpoint.latitude))) {
+                          || (point.latitude != lastpoint.latitude))) {
                           L.circleMarker([point.latitude, point.longitude], options).addTo(map);
                       }
                       lastpoint = point;
