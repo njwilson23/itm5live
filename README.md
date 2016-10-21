@@ -4,6 +4,12 @@
 
 This is the code responsible for the ITM5LIVE dashboard at [itm5live.herokuapp.com](itm5live.herokuapp.com). It's not particularly good.
 
+## Compile Javascript
+
+  rollup -c
+
+  uglifyjs js/itm5live.js -o itm5live.min.js -c -m
+
 ## Deployment
 
 Set up Postgres tables on heroku
