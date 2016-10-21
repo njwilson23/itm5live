@@ -1,0 +1,12 @@
+{
+  "name": "itm5live",
+  "version": "0.0.1",
+  "devDependencies": {
+    "babel-cli": "^6.0.0",
+    "babel-preset-es2015": "^6.0.0",
+    "d3": "^4.2.8",
+    "rollup": "^0.36.3",
+    "rollup-plugin-node-resolve": "^2.0.0",
+    "uglify": "^0.1.5"
+  }
+}

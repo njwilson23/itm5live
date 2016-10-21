@@ -1,5 +1,8 @@
+import {select, event, min, max, extent, line as d3line, map, json, isoParse, mean as d3mean, zoom, scaleTime, scaleLinear, axisBottom, axisLeft} from "d3";
+export {json, isoParse, zoom, d3mean}
+
 // Create a set of axes for time series data
-function createTimeSeriesAxes(geom, id, label) {
+export function createTimeSeriesAxes(geom, id, label) {
   var ax = Object();
 
   var margin = geom.margin,
@@ -7,11 +10,11 @@ function createTimeSeriesAxes(geom, id, label) {
       height = geom.height;
 
   // Define an original time scale to use when rescaling the actual time scale
-  var x = d3.scaleTime().range([0, width]),
-      y = d3.scaleLinear().range([height, 0]),
-      x_orig = d3.scaleTime().range([0, width]);
+  var x = scaleTime().range([0, width]),
+      y = scaleLinear().range([height, 0]),
+      x_orig = scaleTime().range([0, width]);
 
-  var svg = d3.select(id).append("svg")
+  var svg = select(id).append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom);
 
@@ -21,8 +24,8 @@ function createTimeSeriesAxes(geom, id, label) {
   var xDomain = [NaN, NaN],
       yDomain = [NaN, NaN];
 
-  var xAxis = d3.axisBottom(x),
-      yAxis = d3.axisLeft(y);
+  var xAxis = axisBottom(x),
+      yAxis = axisLeft(y);
 
   var gX = g.append("g")
       .attr("class", "axis axis--x")
@@ -65,13 +68,13 @@ function createTimeSeriesAxes(geom, id, label) {
   ax.xAxis = xAxis;
   ax.yAxis = yAxis;
   ax.zoomRect = zoomRect;
-  ax.series = d3.map();
+  ax.series = map();
   return ax;
 }
 
 // Add scalar time series data to a set of axes
-function addScalarTimeSeries(ax, data, className) {
-  var xExtent = d3.extent(data, function(d) { return d.t; });
+export function addScalarTimeSeries(ax, data, className) {
+  var xExtent = extent(data, function(d) { return d.t; });
 
   if (isFinite(ax.xDomain[0])) {
     ax.xDomain[0] = Math.min(xExtent[0], ax.xDomain[0]);
@@ -90,7 +93,7 @@ function addScalarTimeSeries(ax, data, className) {
 
   ax.gX.call(ax.xAxis);
 
-  var line = d3.line()
+  var line = d3line()
     .x(function(d) { return ax.x(d.t); })
     .y(function(d) { return ax.y(d.y); });
 
@@ -103,8 +106,8 @@ function addScalarTimeSeries(ax, data, className) {
 }
 
 // Add vector time series data to a set of axes
-function addVectorTimeSeries(ax, data, className) {
-  var xExtent = d3.extent(data, function(d) { return d.t; });
+export function addVectorTimeSeries(ax, data, className) {
+  var xExtent = extent(data, function(d) { return d.t; });
 
   if (isFinite(ax.xDomain[0])) {
     ax.xDomain[0] = Math.min(xExtent[0], ax.xDomain[0]);
@@ -149,13 +152,13 @@ function addVectorTimeSeries(ax, data, className) {
 }
 
 // Adjust the Y-scale on an axes to match the limits of active scalar data
-function tightenScaY(ax) {
+export function tightenScaY(ax) {
   var data = ax.g.selectAll("path.active").data()
-  var vmin = null; vmax = null;
+  var vmin = null, vmax = null;
   var _vmin, _vmax;
   for (var i=0; i!=data.length; i++) {
-    _vmin = d3.min(data[i], function(d) { return d.y; })
-    _vmax = d3.max(data[i], function(d) { return d.y; })
+    _vmin = min(data[i], function(d) { return d.y; })
+    _vmax = max(data[i], function(d) { return d.y; })
     vmin = vmin === null ? _vmin : Math.min(_vmin, vmin);
     vmax = vmax === null ? _vmax : Math.max(_vmax, vmax);
   }
@@ -168,10 +171,10 @@ function tightenScaY(ax) {
 }
 
 // Adjust the Y-scale on an axes to match the limits of active vector data
-function tightenVecY(ax) {
+export function tightenVecY(ax) {
   var data = ax.g.selectAll("circle.active").data()
-  ax.yDomain[0] = Math.max(0, d3.min(data, function(d) { return d.y-1; }));
-  ax.yDomain[1] = d3.max(data, function(d) { return d.y+1; });
+  ax.yDomain[0] = Math.max(0, min(data, function(d) { return d.y-1; }));
+  ax.yDomain[1] = max(data, function(d) { return d.y+1; });
   ax.y.domain(ax.yDomain);
   ax.gY.call(ax.yAxis.scale(ax.y));
 
@@ -191,7 +194,7 @@ function tightenVecY(ax) {
 }
 
 // Adjust the horizontal coodinates of data to match axes scales
-function rescaleAxes(ax) {
+export function rescaleAxes(ax) {
   ax.g.selectAll(".line")
     .attr("d", ax.series.values()[0]);
 
@@ -210,8 +213,8 @@ function rescaleAxes(ax) {
     });
 }
 
-function zoomed() {
-  var ax, t = d3.event.transform;
+export function zoomed() {
+  var ax, t = event.transform;
   for (var i=0; i!=axes.length; i++) {
     ax = axes[i];
     ax.x.domain(t.rescaleX(ax.x_).domain());
@@ -221,7 +224,7 @@ function zoomed() {
 }
 
 // Filter function that detects rows in data with any nulls
-function filterNulls(d) {
+export function filterNulls(d) {
   var k = Object.keys(d);
   for (var i=0; i!=k.length; i++) {
       if (d[k[i]] === null) {
@@ -232,7 +235,7 @@ function filterNulls(d) {
 }
 
 // Compute the magnitude and unit vector of a vector
-function normalizeVec(u, v) {
+export function normalizeVec(u, v) {
       var mag = Math.sqrt(u*u + v*v);
       if (mag == 0) {
           return {mag: mag, u: 0, v: 0};
@@ -243,7 +246,7 @@ function normalizeVec(u, v) {
 
 // Given an object containing arrays mapped to column names, return an Array containing row objects
 // If the columns are of unequal length, pad the shorter ones with null
-function transpose(obj) {
+export function transpose(obj) {
   var properties = Object.keys(obj);
   var outArr = Array();
   var L = 0;
