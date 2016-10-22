@@ -120,10 +120,10 @@
             for (var i=0; i!=els.length; i++) {
               toggleActive(els[i]);
             }
-            itm5live.tightenVecY(axCurrent);
-            itm5live.tightenScaY(axTemp);
-            itm5live.tightenScaY(axSal);
-            itm5live.tightenScaY(axPres);
+            itm.tightenVecY(axCurrent);
+            itm.tightenScaY(axTemp);
+            itm.tightenScaY(axSal);
+            itm.tightenScaY(axPres);
           }
         }(depth));
       }
@@ -142,7 +142,7 @@
       request.onreadystatechange = function() {
           if (request.readyState === XMLHttpRequest.DONE) {
               if (request.status == 200) {
-                  positions = itm5live.transpose(JSON.parse(request.responseText));
+                  positions = itm.transpose(JSON.parse(request.responseText));
                   var point, lastpoint;
                   var options;
                   for (var i=0; i!=positions.length; i++) {
@@ -187,9 +187,9 @@
       var geom = {width: colWidth-125, height: 250,
                   margin: {top: 20, bottom: 50, left: 80, right: 20}};
 
-      var axSal = itm5live.createTimeSeriesAxes(geom, "#axSal", "Salinity (psu)");
-      var axTemp = itm5live.createTimeSeriesAxes(geom, "#axTemp", "Temperature (\u00b0C)");
-      var axPres = itm5live.createTimeSeriesAxes(geom, "#axPres", "Pressure anomaly (dbar)");
+      var axSal = itm.createTimeSeriesAxes(geom, "#axSal", "Salinity (psu)");
+      var axTemp = itm.createTimeSeriesAxes(geom, "#axTemp", "Temperature (\u00b0C)");
+      var axPres = itm.createTimeSeriesAxes(geom, "#axPres", "Pressure anomaly (dbar)");
 
       function setLastUpdate(d) {
         var el = document.getElementById("lastUpdate");
@@ -197,11 +197,11 @@
         el.innerHTML = d.date.toLocaleString();
       }
 
-      itm5live.json("/data/mc1.json", function(error, _data) {
+      itm.json("/data/mc1.json", function(error, _data) {
         if (error) throw error;
-        var data = itm5live.transpose(_data);
+        var data = itm.transpose(_data);
         data.forEach(function(d) {
-          d.date = itm5live.isoParse(d.date);
+          d.date = itm.isoParse(d.date);
         });
 
         setLastUpdate(data[data.length-1]);
@@ -209,172 +209,172 @@
         var el = document.getElementById("loadIndicator");
         el.parentNode.removeChild(el);
 
-        data = data.filter(itm5live.filterNulls);
-        itm5live.addScalarTimeSeries(axTemp, data.map(function(d) {
+        data = data.filter(itm.filterNulls);
+        itm.addScalarTimeSeries(axTemp, data.map(function(d) {
           return {t: d.date, y: d.temperature};
         }), "depth150");
-        itm5live.addScalarTimeSeries(axSal, data.map(function(d) {
+        itm.addScalarTimeSeries(axSal, data.map(function(d) {
           return {t: d.date, y: d.salinity};
         }), "depth150");
-        var pAvg = itm5live.d3mean(data, function(d) {
+        var pAvg = itm.d3mean(data, function(d) {
           return d.pressure;
         });
-        itm5live.addScalarTimeSeries(axPres, data.map(function(d) {
+        itm.addScalarTimeSeries(axPres, data.map(function(d) {
           return {t: d.date, y: d.pressure-pAvg};
         }), "depth150");
-        itm5live.rescaleAxes(axTemp);
-        itm5live.rescaleAxes(axSal);
-        itm5live.rescaleAxes(axPres);
-        itm5live.tightenScaY(axTemp);
-        itm5live.tightenScaY(axSal);
-        itm5live.tightenScaY(axPres);
+        itm.rescaleAxes(axTemp);
+        itm.rescaleAxes(axSal);
+        itm.rescaleAxes(axPres);
+        itm.tightenScaY(axTemp);
+        itm.tightenScaY(axSal);
+        itm.tightenScaY(axPres);
       });
 
-      itm5live.json("/data/mc2.json", function(error, _data) {
+      itm.json("/data/mc2.json", function(error, _data) {
         if (error) throw error;
-        var data = itm5live.transpose(_data);
+        var data = itm.transpose(_data);
         data.forEach(function(d) {
-          d.date = itm5live.isoParse(d.date);
+          d.date = itm.isoParse(d.date);
         });
-        data = data.filter(itm5live.filterNulls);
-        itm5live.addScalarTimeSeries(axTemp, data.map(function(d) {
+        data = data.filter(itm.filterNulls);
+        itm.addScalarTimeSeries(axTemp, data.map(function(d) {
           return {t: d.date, y: d.temperature};
         }), "depth250");
-        itm5live.addScalarTimeSeries(axSal, data.map(function(d) {
+        itm.addScalarTimeSeries(axSal, data.map(function(d) {
           return {t: d.date, y: d.salinity};
         }), "depth250");
-        var pAvg = itm5live.d3mean(data, function(d) {
+        var pAvg = itm.d3mean(data, function(d) {
           return d.pressure;
         });
-        itm5live.addScalarTimeSeries(axPres, data.map(function(d) {
+        itm.addScalarTimeSeries(axPres, data.map(function(d) {
           return {t: d.date, y: d.pressure-pAvg};
         }), "depth250");
-        itm5live.rescaleAxes(axTemp);
-        itm5live.rescaleAxes(axSal);
-        itm5live.rescaleAxes(axPres);
-        itm5live.tightenScaY(axTemp);
-        itm5live.tightenScaY(axSal);
-        itm5live.tightenScaY(axPres);
+        itm.rescaleAxes(axTemp);
+        itm.rescaleAxes(axSal);
+        itm.rescaleAxes(axPres);
+        itm.tightenScaY(axTemp);
+        itm.tightenScaY(axSal);
+        itm.tightenScaY(axPres);
       });
 
-      itm5live.json("/data/mc3.json", function(error, _data) {
+      itm.json("/data/mc3.json", function(error, _data) {
         if (error) throw error;
-        var data = itm5live.transpose(_data);
+        var data = itm.transpose(_data);
         data.forEach(function(d) {
-          d.date = itm5live.isoParse(d.date);
+          d.date = itm.isoParse(d.date);
         });
-        data = data.filter(itm5live.filterNulls);
-        itm5live.addScalarTimeSeries(axTemp, data.map(function(d) {
+        data = data.filter(itm.filterNulls);
+        itm.addScalarTimeSeries(axTemp, data.map(function(d) {
           return {t: d.date, y: d.temperature};
         }), "depth350");
-        itm5live.addScalarTimeSeries(axSal, data.map(function(d) {
+        itm.addScalarTimeSeries(axSal, data.map(function(d) {
           return {t: d.date, y: d.salinity};
         }), "depth350");
-        var pAvg = itm5live.d3mean(data, function(d) {
+        var pAvg = itm.d3mean(data, function(d) {
           return d.pressure;
         });
-        itm5live.addScalarTimeSeries(axPres, data.map(function(d) {
+        itm.addScalarTimeSeries(axPres, data.map(function(d) {
           return {t: d.date, y: d.pressure-pAvg};
         }), "depth350");
-        itm5live.rescaleAxes(axTemp);
-        itm5live.rescaleAxes(axSal);
-        itm5live.rescaleAxes(axPres);
-        itm5live.tightenScaY(axTemp);
-        itm5live.tightenScaY(axSal);
-        itm5live.tightenScaY(axPres);
+        itm.rescaleAxes(axTemp);
+        itm.rescaleAxes(axSal);
+        itm.rescaleAxes(axPres);
+        itm.tightenScaY(axTemp);
+        itm.tightenScaY(axSal);
+        itm.tightenScaY(axPres);
       });
 
-      itm5live.json("/data/mc4.json", function(error, _data) {
+      itm.json("/data/mc4.json", function(error, _data) {
         if (error) throw error;
-        var data = itm5live.transpose(_data);
+        var data = itm.transpose(_data);
         data.forEach(function(d) {
-          d.date = itm5live.isoParse(d.date);
+          d.date = itm.isoParse(d.date);
         });
-        data = data.filter(itm5live.filterNulls);
-        itm5live.addScalarTimeSeries(axTemp, data.map(function(d) {
+        data = data.filter(itm.filterNulls);
+        itm.addScalarTimeSeries(axTemp, data.map(function(d) {
           return {t: d.date, y: d.temperature};
         }), "depth500");
-        itm5live.addScalarTimeSeries(axSal, data.map(function(d) {
+        itm.addScalarTimeSeries(axSal, data.map(function(d) {
           return {t: d.date, y: d.salinity};
         }), "depth500");
-        var pAvg = itm5live.d3mean(data, function(d) {
+        var pAvg = itm.d3mean(data, function(d) {
           return d.pressure;
         });
-        itm5live.addScalarTimeSeries(axPres, data.map(function(d) {
+        itm.addScalarTimeSeries(axPres, data.map(function(d) {
           return {t: d.date, y: d.pressure-pAvg};
         }), "depth500");
-        itm5live.rescaleAxes(axTemp);
-        itm5live.rescaleAxes(axSal);
-        itm5live.rescaleAxes(axPres);
-        itm5live.tightenScaY(axTemp);
-        itm5live.tightenScaY(axSal);
-        itm5live.tightenScaY(axPres);
+        itm.rescaleAxes(axTemp);
+        itm.rescaleAxes(axSal);
+        itm.rescaleAxes(axPres);
+        itm.tightenScaY(axTemp);
+        itm.tightenScaY(axSal);
+        itm.tightenScaY(axPres);
       });
 
-      var axCurrent = itm5live.createTimeSeriesAxes(geom, "#axCurrent", "Current velocity (cm/s)");
+      var axCurrent = itm.createTimeSeriesAxes(geom, "#axCurrent", "Current velocity (cm/s)");
 
-      itm5live.json("/data/aq1.json", function(error, _data) {
+      itm.json("/data/aq1.json", function(error, _data) {
           if (error) throw error;
-          var data = itm5live.transpose(_data);
+          var data = itm.transpose(_data);
           data.forEach(function(d) {
-              d.date = itm5live.isoParse(d.date);
+              d.date = itm.isoParse(d.date);
           });
-          data = data.filter(itm5live.filterNulls).map(movingAverage).filter(reduce);
-          itm5live.addVectorTimeSeries(axCurrent, data.map(function(d) {
-              var v = itm5live.normalizeVec(100*d.east, 100*d.north);
+          data = data.filter(itm.filterNulls).map(movingAverage).filter(reduce);
+          itm.addVectorTimeSeries(axCurrent, data.map(function(d) {
+              var v = itm.normalizeVec(100*d.east, 100*d.north);
               return {t: d.date, y: v.mag, vx: 20*v.u, vy: 20*v.v};
           }), "depth150");
-          itm5live.rescaleAxes(axCurrent);
-          itm5live.tightenVecY(axCurrent);
+          itm.rescaleAxes(axCurrent);
+          itm.tightenVecY(axCurrent);
       });
-      itm5live.json("/data/aq2.json", function(error, _data) {
+      itm.json("/data/aq2.json", function(error, _data) {
           if (error) throw error;
-          var data = itm5live.transpose(_data);
+          var data = itm.transpose(_data);
           data.forEach(function(d) {
-              d.date = itm5live.isoParse(d.date);
+              d.date = itm.isoParse(d.date);
           });
-          data = data.filter(itm5live.filterNulls).map(movingAverage).filter(reduce);
-          itm5live.addVectorTimeSeries(axCurrent, data.map(function(d) {
-              var v = itm5live.normalizeVec(100*d.east, 100*d.north);
+          data = data.filter(itm.filterNulls).map(movingAverage).filter(reduce);
+          itm.addVectorTimeSeries(axCurrent, data.map(function(d) {
+              var v = itm.normalizeVec(100*d.east, 100*d.north);
               return {t: d.date, y: v.mag, vx: 20*v.u, vy: 20*v.v};
           }), "depth250");
-          itm5live.rescaleAxes(axCurrent);
-          itm5live.tightenVecY(axCurrent);
+          itm.rescaleAxes(axCurrent);
+          itm.tightenVecY(axCurrent);
       });
-      itm5live.json("/data/aq3.json", function(error, _data) {
+      itm.json("/data/aq3.json", function(error, _data) {
           if (error) throw error;
-          var data = itm5live.transpose(_data);
+          var data = itm.transpose(_data);
           data.forEach(function(d) {
-              d.date = itm5live.isoParse(d.date);
+              d.date = itm.isoParse(d.date);
           });
-          data = data.filter(itm5live.filterNulls).map(movingAverage).filter(reduce);
-          itm5live.addVectorTimeSeries(axCurrent, data.map(function(d) {
-              var v = itm5live.normalizeVec(100*d.east, 100*d.north);
+          data = data.filter(itm.filterNulls).map(movingAverage).filter(reduce);
+          itm.addVectorTimeSeries(axCurrent, data.map(function(d) {
+              var v = itm.normalizeVec(100*d.east, 100*d.north);
               return {t: d.date, y: v.mag, vx: 20*v.u, vy: 20*v.v};
           }), "depth350");
-          itm5live.rescaleAxes(axCurrent);
-          itm5live.tightenVecY(axCurrent);
+          itm.rescaleAxes(axCurrent);
+          itm.tightenVecY(axCurrent);
       });
-      itm5live.json("/data/aq4.json", function(error, _data) {
+      itm.json("/data/aq4.json", function(error, _data) {
           if (error) throw error;
-          var data = itm5live.transpose(_data);
+          var data = itm.transpose(_data);
           data.forEach(function(d) {
-              d.date = itm5live.isoParse(d.date);
+              d.date = itm.isoParse(d.date);
           });
-          data = data.filter(itm5live.filterNulls).map(movingAverage).filter(reduce);
-          itm5live.addVectorTimeSeries(axCurrent, data.map(function(d) {
-              var v = itm5live.normalizeVec(100*d.east, 100*d.north);
+          data = data.filter(itm.filterNulls).map(movingAverage).filter(reduce);
+          itm.addVectorTimeSeries(axCurrent, data.map(function(d) {
+              var v = itm.normalizeVec(100*d.east, 100*d.north);
               return {t: d.date, y: v.mag, vx: 20*v.u, vy: 20*v.v};
           }), "depth500");
-          itm5live.rescaleAxes(axCurrent);
-          itm5live.tightenVecY(axCurrent);
+          itm.rescaleAxes(axCurrent);
+          itm.tightenVecY(axCurrent);
       });
 
-      var zoom = itm5live.zoom()
+      var zoom = itm.zoom()
         .scaleExtent([1, 20])
         .translateExtent([[0, 0], [geom.width, geom.height]])
         .extent([[0, 0], [geom.width, geom.height]])
-        .on("zoom", itm5live.zoomed);
+        .on("zoom", itm.zoomed);
 
       var axes = [axSal, axTemp, axPres, axCurrent];
       var zoomRect;

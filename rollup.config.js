@@ -1,9 +1,9 @@
 import nodeResolve from "rollup-plugin-node-resolve";
 
 export default {
-  entry: 'js/chart.js',
+  entry: 'js/itm5live.package.js',
   dest: 'js/itm5live.js',
   format: 'iife',
-  moduleName: 'itm5live',
+  moduleName: 'itm',
   plugins: [nodeResolve({ jsnext: true, main: true })]
 };

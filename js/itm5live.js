@@ -254,7 +254,7 @@ var min = function(array, f) {
   return a;
 };
 
-var transpose$1 = function(matrix) {
+var transpose = function(matrix) {
   if (!(n = matrix.length)) return [];
   for (var i = -1, m = min(matrix, length), transpose = new Array(m); ++i < m;) {
     for (var j = -1, n, row = transpose[i] = new Array(n); ++j < n;) {
@@ -1356,7 +1356,7 @@ function y(p) {
   return p[1];
 }
 
-var line = function() {
+var d3line = function() {
   var x$$1 = x,
       y$$1 = y,
       defined = constant$2(true),
@@ -1456,7 +1456,7 @@ var area$1 = function() {
   }
 
   function arealine() {
-    return line().defined(defined).curve(curve).context(context);
+    return d3line().defined(defined).curve(curve).context(context);
   }
 
   area.x = function(_) {
@@ -12640,7 +12640,7 @@ function addScalarTimeSeries(ax, data, className) {
 
   ax.gX.call(ax.xAxis);
 
-  var line$$1 = line()
+  var line$$1 = d3line()
     .x(function(d) { return ax.x(d.t); })
     .y(function(d) { return ax.y(d.y); });
 
@@ -12793,7 +12793,7 @@ function normalizeVec(u, v) {
 
 // Given an object containing arrays mapped to column names, return an Array containing row objects
 // If the columns are of unequal length, pad the shorter ones with null
-function transpose$$1(obj) {
+function transpose$1(obj) {
   var properties = Object.keys(obj);
   var outArr = Array();
   var L = 0;
@@ -12829,6 +12829,6 @@ exports.rescaleAxes = rescaleAxes;
 exports.zoomed = zoomed;
 exports.filterNulls = filterNulls;
 exports.normalizeVec = normalizeVec;
-exports.transpose = transpose$$1;
+exports.transpose = transpose$1;
 
-}((this.itm5live = this.itm5live || {})));
+}((this.itm = this.itm || {})));
