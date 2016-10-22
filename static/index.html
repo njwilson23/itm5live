@@ -42,11 +42,9 @@
         <div class="col-md-12">
           <div class="displayBlock">
             <h1 class="centerText">79North Ocean Data</h1>
-            <p class="centerText"><em>Last updated <span id="lastUpdate">Loading...</span></em></p>
+            <p class="centerText"><em>Last updated <span id="lastUpdate">(Loading...)</span></em></p>
             <p>In August 2016, we deployed an ice-tethered mooring in sea ice near the floating ice tongue at 79North glacier. This mooring measures temperature and salinity in the ocean water beneath the floating ice tongue. This data will be important for understanding how ocean processes affect glacier behaviour.</p>
-
             <p>The data are transmitted from the glacier daily and made available via the plots and the links below.</p>
-
             <h1 id="loadIndicator">LOADING</h1>
 
             <h2>Map</h2>
@@ -201,10 +199,24 @@
       var axTemp = itm.createTimeSeriesAxes(geom, "#axTemp", "Temperature (\u00b0C)");
       var axPres = itm.createTimeSeriesAxes(geom, "#axPres", "Pressure anomaly (dbar)");
 
+      // given an object containing a "date" -> Date key-value pair, fill the lastUpdate span
+      // with some text explaining how old the data are
       function setLastUpdate(d) {
         var el = document.getElementById("lastUpdate");
-        console.log(d.date);
-        el.innerHTML = d.date.toLocaleString();
+        var interval = (new Date()) - d.date; // interval in milliseconds
+        var outStr = "";
+        if (interval < 2*60*1000) {
+          outStr = Math.floor(interval/1000) + " seconds ago";
+        } else if (interval < 2*3600*1000) {
+          outStr = Math.floor(interval/1000/60) + " minutes ago";
+        } else if (interval < 2*24*3600*1000) {
+          outStr = Math.floor(interval/1000/3600) + " hours ago";
+        } else if (interval < 2*365.24*24*3600*1000) {
+          outStr = Math.floor(interval/1000/60/24) + " days ago";
+        } else {
+          outStr = Math.floor(interval/1000/3600/24/365.24) + " years ago";
+        }
+        el.innerHTML = outStr;
       }
 
       itm.json("/data/mc1.json", function(error, _data) {

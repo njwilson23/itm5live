@@ -7,7 +7,7 @@ app = flask.Flask("itm5live", static_url_path="")
 
 @app.route("/")
 def root():
-    return flask.send_file("static/chart.html")
+    return flask.send_file("static/index.html")
 
 @app.route("/map.html")
 def map():
