@@ -25,7 +25,7 @@ else:
 atexit.register(CONN.close)
 
 def fmt(f, v):
-    if f == "date":
+    if f.startswith("date"):
         return v.isoformat()
     try:
         if math.isnan(float(v)):
