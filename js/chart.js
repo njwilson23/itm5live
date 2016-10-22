@@ -136,7 +136,7 @@ export function addVectorTimeSeries(ax, data, className) {
       .attr("x1", function(d) { return ax.x(d.t) })
       .attr("y1", function(d) { return ax.y(d.y) })
       .attr("x2", function(d) { return ax.x(d.t)+d.vx })
-      .attr("y2", function(d) { return ax.y(d.y)+d.vy })
+      .attr("y2", function(d) { return ax.y(d.y)-d.vy })
       .attr("class", "vec "+className)
     .merge(line);
 
