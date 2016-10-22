@@ -213,16 +213,6 @@ export function rescaleAxes(ax) {
     });
 }
 
-export function zoomed() {
-  var ax, t = event.transform;
-  for (var i=0; i!=axes.length; i++) {
-    ax = axes[i];
-    ax.x.domain(t.rescaleX(ax.x_).domain());
-    ax.gX.call(ax.xAxis.scale(ax.x));
-    rescaleAxes(ax);
-  }
-}
-
 // Filter function that detects rows in data with any nulls
 export function filterNulls(d) {
   var k = Object.keys(d);
