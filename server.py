@@ -17,6 +17,10 @@ def map():
 def send_static(filename):
     return flask.send_from_directory("static", filename)
 
+@app.route("/images/<path:filename>")
+def send_image(filename):
+    return flask.send_from_directory("images", filename)
+
 @app.route("/css/<path:filename>")
 def css(filename):
     return flask.send_from_directory("css", filename)
