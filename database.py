@@ -1,29 +1,37 @@
 """ Functions for extracting and updating PostGres tables """
-
-import atexit
 import os
 import math
 import urllib.parse
 import psycopg2
 
+def with_connection(func):
+    """ decorator that injects a postgres connection as first argument to its function
+    and returns a wrapped function without the first argument """
+    def wrapped(*args, **kwargs):
+        if "DATABASE_URL" in os.environ:
+            conn = psycopg2.connect(database=URL.path[1:],
+                                    user=URL.username,
+                                    password=URL.password,
+                                    host=URL.hostname,
+                                    port=URL.port)
+        else:
+            dbname = "itm5db"
+            user="natw"
+            host=os.environ.get("DATABASE_URL", "/var/run/postgresql")
+            conn = psycopg2.connect("dbname=%s user=%s host=%s" % (dbname, user, host))
+        try:
+            ret = func(conn, *args, **kwargs)
+        except Exception as exc:
+            conn.rollback()
+            raise exc
+        finally:
+            conn.close()
+        return ret
+    return wrapped
+
 if "DATABASE_URL" in os.environ:
     urllib.parse.uses_netloc.append("postgres")
-    url = urllib.parse.urlparse(os.environ["DATABASE_URL"])
-
-    CONN = psycopg2.connect(
-        database=url.path[1:],
-        user=url.username,
-        password=url.password,
-        host=url.hostname,
-        port=url.port
-    )
-else:
-    dbname = "itm5db"
-    user="natw"
-    host=os.environ.get("DATABASE_URL", "/var/run/postgresql")
-    CONN = psycopg2.connect("dbname=%s user=%s host=%s" % (dbname, user, host))
-
-atexit.register(CONN.close)
+    URL = urllib.parse.urlparse(os.environ["DATABASE_URL"])
 
 def fmt(f, v):
     if f.startswith("date"):
@@ -35,7 +43,8 @@ def fmt(f, v):
         return v
     return v
 
-def extract(table, fields, retfields=None):
+@with_connection
+def extract(conn, table, fields, retfields=None):
     """ given a list of fields (*fields*), return a dictionary containing
     columns from the db """
     if retfields is None:
@@ -44,8 +53,8 @@ def extract(table, fields, retfields=None):
         if len(retfields) != len(fields):
             raise ValueError("return field names and table field names must be"
                              " equal length")
-    cur = CONN.cursor()
 
+    cur = conn.cursor()
     cur.execute("SELECT " + ",".join(fields) + " FROM " + table + " ORDER BY date;")
     result = cur.fetchall()
     retdict = {k:[] for k in retfields}
@@ -54,20 +63,20 @@ def extract(table, fields, retfields=None):
             retdict[rf].append(fmt(f, v))
     return retdict
 
-def update_column(tablename, data, dates, colname, log=None):
+@with_connection
+def update_column(conn, tablename, data, dates, colname, log=None):
     """ given a list of dates and a column of data, update database """
-    cur = CONN.cursor()
-
     expr = ("INSERT INTO {1} (date, {0}) VALUES (%s, %s) "
             "ON CONFLICT (date) "
             "DO UPDATE SET {0}=%s "
             "WHERE {1}.date=%s".format(colname, tablename))
 
+    cur = conn.cursor()
     try:
         cur.executemany(expr, list(zip(dates, data, data, dates)))
-        CONN.commit()
+        conn.commit()
     except Exception as e:
-        CONN.rollback()
+        conn.rollback()
         if log is not None:
             log.error(colname, e)
         else:
