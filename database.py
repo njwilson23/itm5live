@@ -4,7 +4,6 @@ import atexit
 import os
 import math
 import urllib.parse
-import traceback
 import psycopg2
 
 if "DATABASE_URL" in os.environ:

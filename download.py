@@ -9,7 +9,6 @@ import statistics
 import sys
 import urllib.request
 import zipfile
-
 import logging
 
 import database

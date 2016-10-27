@@ -51,6 +51,8 @@ class TestDownload(unittest.TestCase):
         self.assertEqual(len(aggdata), 251)
         return
 
+class TestDatabase(unittest.TestCase):
+
     def test_extract(self):
         d = database.extract("itm5", ["date", "mc1salinity", "ad2up"])
         self.assertTrue("date" in d)

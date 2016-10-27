@@ -1,4 +1,6 @@
-import os
+"""
+Server for itm5live
+"""
 import json
 import database
 import flask
@@ -81,7 +83,7 @@ def send_data(filename):
 
     params = files.get(filename, None)
     if params is None:
-        flash.abort(404)
+        flask.abort(404)
 
     return json.dumps(database.extract(params["table"], params["fields"],
                                        retfields=params.get("retfields", None)))
