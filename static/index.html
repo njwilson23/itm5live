@@ -97,14 +97,6 @@
         <div class="col-sm-6 col-md-3"><a href="data/aq4.json"><div class="button">500 m Aquadopp</div></a></div>
       </div> <!-- row -->
 
-      <div class="row">
-        <div class="col-sm-12">
-          <div class="displayBlock">
-            <p style="text-align: center; margin-top: 2em; margin-bottom: 1em;">Built with <a href="http://narwhal.ironicmtn.com">narwhal</a>.</p>
-          </div>
-        </div>
-      </div> <!-- row -->
-
     <script>
       // Behaviour for buttons that toggle lines
       var depths = [150, 250, 350, 500];
@@ -241,7 +233,7 @@
         var el = document.getElementById("loadIndicator");
         el.parentNode.removeChild(el);
 
-        data = data.filter(itm.filterNulls);
+        data = data.filter(itm.filterNulls).filter(decimateProperties);
         itm.addScalarTimeSeries(axTemp, data.map(function(d) {
           return {t: d.date, y: d.temperature};
         }), "depth150");
@@ -268,7 +260,7 @@
         data.forEach(function(d) {
           d.date = itm.isoParse(d.date);
         });
-        data = data.filter(itm.filterNulls);
+        data = data.filter(itm.filterNulls).filter(decimateProperties);
         itm.addScalarTimeSeries(axTemp, data.map(function(d) {
           return {t: d.date, y: d.temperature};
         }), "depth250");
@@ -295,7 +287,7 @@
         data.forEach(function(d) {
           d.date = itm.isoParse(d.date);
         });
-        data = data.filter(itm.filterNulls);
+        data = data.filter(itm.filterNulls).filter(decimateProperties);
         itm.addScalarTimeSeries(axTemp, data.map(function(d) {
           return {t: d.date, y: d.temperature};
         }), "depth350");
@@ -322,7 +314,7 @@
         data.forEach(function(d) {
           d.date = itm.isoParse(d.date);
         });
-        data = data.filter(itm.filterNulls);
+        data = data.filter(itm.filterNulls).filter(decimateProperties);
         itm.addScalarTimeSeries(axTemp, data.map(function(d) {
           return {t: d.date, y: d.temperature};
         }), "depth500");
@@ -351,7 +343,7 @@
           data.forEach(function(d) {
               d.date = itm.isoParse(d.date);
           });
-          data = data.filter(itm.filterNulls).map(movingAverage).filter(reduce);
+          data = data.filter(itm.filterNulls).map(movingAverage).filter(decimateCurrents);
           itm.addVectorTimeSeries(axCurrent, data.map(function(d) {
               var v = itm.normalizeVec(100*d.east, 100*d.north);
               return {t: d.date, y: v.mag, vx: 20*v.u, vy: 20*v.v};
@@ -365,7 +357,7 @@
           data.forEach(function(d) {
               d.date = itm.isoParse(d.date);
           });
-          data = data.filter(itm.filterNulls).map(movingAverage).filter(reduce);
+          data = data.filter(itm.filterNulls).map(movingAverage).filter(decimateCurrents);
           itm.addVectorTimeSeries(axCurrent, data.map(function(d) {
               var v = itm.normalizeVec(100*d.east, 100*d.north);
               return {t: d.date, y: v.mag, vx: 20*v.u, vy: 20*v.v};
@@ -379,7 +371,7 @@
           data.forEach(function(d) {
               d.date = itm.isoParse(d.date);
           });
-          data = data.filter(itm.filterNulls).map(movingAverage).filter(reduce);
+          data = data.filter(itm.filterNulls).map(movingAverage).filter(decimateCurrents);
           itm.addVectorTimeSeries(axCurrent, data.map(function(d) {
               var v = itm.normalizeVec(100*d.east, 100*d.north);
               return {t: d.date, y: v.mag, vx: 20*v.u, vy: 20*v.v};
@@ -393,7 +385,7 @@
           data.forEach(function(d) {
               d.date = itm.isoParse(d.date);
           });
-          data = data.filter(itm.filterNulls).map(movingAverage).filter(reduce);
+          data = data.filter(itm.filterNulls).map(movingAverage).filter(decimateCurrents);
           itm.addVectorTimeSeries(axCurrent, data.map(function(d) {
               var v = itm.normalizeVec(100*d.east, 100*d.north);
               return {t: d.date, y: v.mag, vx: 20*v.u, vy: 20*v.v};
@@ -416,8 +408,8 @@
       }
 
       function movingAverage(d, i, data) {
-        var imin = Math.max(0, i-3);
-        var imax = Math.min(data.length, i+4) 
+        var imin = Math.max(0, i-5);
+        var imax = Math.min(data.length, i+6)
         var u = 0;
         var v = 0;
         for (var i=imin; i!=imax; i++) {
@@ -427,8 +419,12 @@
         return {date: d.date, east: u / (imax-imin+1), north: v / (imax-imin+1)};
       }
 
-      function reduce(d, i) {
-        return (i%6==0);
+      function decimateProperties(d, i) {
+        return (i%2==0);
+      }
+
+      function decimateCurrents(d, i) {
+        return (i%12==0);
       }
 
     </script>
