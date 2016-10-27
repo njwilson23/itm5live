@@ -1,3 +1,6 @@
+""" Provides functions for pulling data from the WHOI server, constructing
+tables, and computing aggregates """
+
 import datetime
 import itertools
 import math
@@ -24,6 +27,8 @@ LOG.addHandler(_handler)
 LOG.setLevel(logging.WARNING)
 
 def getdatafromWHOI():
+    """ Download data from the WHOI server, decompress, and return a dictionary
+    where keys are filenames and values are streams of text """
     DATA = {}
 
     try:
@@ -45,6 +50,8 @@ def getdatafromWHOI():
     return DATA
 
 def dat2rows(d):
+    """ Take a stream of text read from a file and return a list of lists
+    containing the row-wise data. """
     s = d.decode("utf-8")
     if "aquadopp" in s[:20]:
         fields = ["year", "day", "pressure", "temperature", "east", "north", "up"]
@@ -63,7 +70,9 @@ def dat2rows(d):
     return rows
 
 def parse_year_day(year, day):
-    return datetime.datetime(year, 1, 1, tzinfo=datetime.timezone.utc) + datetime.timedelta(days=day-1)
+    """ convert a year and day number to a date """
+    jan1 = datetime.datetime(year, 1, 1, tzinfo=datetime.timezone.utc)
+    return jan1 + datetime.timedelta(days=day-1)
 
 def rows_aggregate_hourly(rows):
     """ create hourly aggregates and insert "date" column into position 2 """
@@ -127,6 +136,33 @@ def rows_aggregate_daily(rows):
     return aggrows
 
 def merge_rows(rowdict):
+
+    """ given a dictionary that maps filenames to lists of file rows, return a
+    list of merged column names and a list of lists representing merged file
+    contents
+
+    That is, starting with
+
+    {fnm1: [header1, row1_0, row1_1, row1_2...],
+     fnm2: [header2, row2_0, row2_1, row2_2...],
+     ...}
+
+     return
+
+     [fnm1_header1a, fnm1_header1b, ...
+      fnm2_header1a, fnm2_header2b, ...
+      ...]
+
+     and
+
+     [[row1_0a, row1_0b, ...
+       row2_0a, row2_0b, ...],
+      [row1_1a, row1_1b, ...
+       row2_1a, row2_1b, ...],
+      [row1_2a, row1_2b, ...
+       row2_2a, row2_2b, ...], ...]
+    """
+
     dates = [r[2] for r in itertools.chain(*(rows[1:] for rows in rowdict.values()))]
     dates = list(set(dates))
     dates.sort()

@@ -1,3 +1,5 @@
+""" Functions for extracting and updating PostGres tables """
+
 import atexit
 import os
 import math
