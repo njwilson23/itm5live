@@ -37,8 +37,8 @@ def fmt(f, v):
     return v
 
 def extract(table, fields, retfields=None):
-    """ given a list of field (*fields*), return an iterator of dictionaries
-    containing rows from the db """
+    """ given a list of fields (*fields*), return a dictionary containing
+    columns from the db """
     if retfields is None:
         retfields = fields
     else:

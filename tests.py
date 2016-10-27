@@ -2,6 +2,7 @@ import unittest
 import math
 import datetime
 import download
+import database
 
 class TestDownload(unittest.TestCase):
 
@@ -48,6 +49,28 @@ class TestDownload(unittest.TestCase):
         aggdata = download.rows_aggregate_hourly(data)
         self.assertEqual(aggdata[0][2], "date")
         self.assertEqual(len(aggdata), 251)
+        return
+
+    def test_extract(self):
+        d = database.extract("itm5", ["date", "mc1salinity", "ad2up"])
+        self.assertTrue("date" in d)
+        self.assertTrue("mc1salinity" in d)
+        self.assertTrue("ad2up" in d)
+        self.assertTrue(isinstance(d.get("date", None), list))
+        self.assertTrue(isinstance(d.get("mc1salinity", None), list))
+        self.assertTrue(isinstance(d.get("ad2up", None), list))
+        return
+
+    def test_extract_custom_retfields(self):
+        d = database.extract("itm5", ["date", "mc1salinity", "ad2up"],
+                             retfields=["time", "salinity", "upvel"])
+        self.assertTrue("time" in d)
+        self.assertTrue("salinity" in d)
+        self.assertTrue("upvel" in d)
+        self.assertTrue(isinstance(d.get("time", None), list))
+        self.assertTrue(isinstance(d.get("salinity", None), list))
+        self.assertTrue(isinstance(d.get("upvel", None), list))
+        return
 
 if __name__ == "__main__":
     unittest.main()

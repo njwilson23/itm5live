@@ -83,7 +83,8 @@ def send_data(filename):
     if params is None:
         flash.abort(404)
 
-    return json.dumps(database.extract(params["table"], params["fields"], retfields=params.get("retfields", None)))
+    return json.dumps(database.extract(params["table"], params["fields"],
+                                       retfields=params.get("retfields", None)))
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000)
