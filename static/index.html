@@ -82,19 +82,21 @@
       <div class="row displayBlock">
         <div class="col-sm-12">
           <h2>Data</h2>
-          <p>All data are preliminary at this stage and provided without any guarantees regarding their accuracy or suitability for any purpose. The data used in the plots above may be downloaded in JSON format below. Prior to using these data please contact the authors, <a href="mailto:fstraneo@whoi.edu">F. Straneo</a> and <a href="mailto:nwilson@whoi.edu">N. Wilson</a>.</p>
+          <p>All data are preliminary at this stage and provided without any
+          guarantees regarding their accuracy or suitability for any purpose.
+          The data used in the plots above may be downloaded in CSV format below. Prior to using these data please contact the authors, <a href="mailto:fstraneo@whoi.edu">F. Straneo</a> and <a href="mailto:nwilson@whoi.edu">N. Wilson</a>.</p>
         </div>
       </div> <!-- row -->
 
       <div class="row displayBlock">
-        <div class="col-sm-6 col-md-3"><a href="data/mc1.json"><div class="button">150 m Microcat</div></a></div>
-        <div class="col-sm-6 col-md-3"><a href="data/mc2.json"><div class="button">250 m Microcat</div></a></div>
-        <div class="col-sm-6 col-md-3"><a href="data/mc3.json"><div class="button">350 m Microcat</div></a></div>
-        <div class="col-sm-6 col-md-3"><a href="data/mc4.json"><div class="button">500 m Microcat</div></a></div>
-        <div class="col-sm-6 col-md-3"><a href="data/aq1.json"><div class="button">150 m Aquadopp</div></a></div>
-        <div class="col-sm-6 col-md-3"><a href="data/aq2.json"><div class="button">250 m Aquadopp</div></a></div>
-        <div class="col-sm-6 col-md-3"><a href="data/aq3.json"><div class="button">350 m Aquadopp</div></a></div>
-        <div class="col-sm-6 col-md-3"><a href="data/aq4.json"><div class="button">500 m Aquadopp</div></a></div>
+        <div class="col-sm-6 col-md-3"><a href="data/mc1.csv?minute=60,raw=1"><div class="button">150 m Microcat</div></a></div>
+        <div class="col-sm-6 col-md-3"><a href="data/mc2.csv?minute=60,raw=1"><div class="button">250 m Microcat</div></a></div>
+        <div class="col-sm-6 col-md-3"><a href="data/mc3.csv?minute=60,raw=1"><div class="button">350 m Microcat</div></a></div>
+        <div class="col-sm-6 col-md-3"><a href="data/mc4.csv?minute=60,raw=1"><div class="button">500 m Microcat</div></a></div>
+        <div class="col-sm-6 col-md-3"><a href="data/aq1.csv?minute=60,raw=1"><div class="button">150 m Aquadopp</div></a></div>
+        <div class="col-sm-6 col-md-3"><a href="data/aq2.csv?minute=60,raw=1"><div class="button">250 m Aquadopp</div></a></div>
+        <div class="col-sm-6 col-md-3"><a href="data/aq3.csv?minute=60,raw=1"><div class="button">350 m Aquadopp</div></a></div>
+        <div class="col-sm-6 col-md-3"><a href="data/aq4.csv?minute=60,raw=1"><div class="button">500 m Aquadopp</div></a></div>
       </div> <!-- row -->
 
       <div class="row displayBlock">
@@ -228,11 +230,13 @@
         el.innerHTML = outStr;
       }
 
-      itm.json("/data/mc1.json", function(error, _data) {
+      itm.json("/data/mc1.json?minute=240", function(error, _data) {
         if (error) throw error;
         var data = itm.transpose(_data);
         data.forEach(function(d) {
-          d.date = itm.isoParse(d.date);
+          var date = new Date("2000-01-01T00:00:00Z");
+          date.setSeconds(date.getSeconds()+d.timestamp);
+          d.date = date;
         });
 
         setLastUpdate(data[data.length-1]);
@@ -240,7 +244,7 @@
         var el = document.getElementById("loadIndicator");
         el.parentNode.removeChild(el);
 
-        data = data.filter(itm.filterNulls).filter(decimateProperties);
+        data = data.filter(itm.filterNulls);
         itm.addScalarTimeSeries(axTemp, data.map(function(d) {
           return {t: d.date, y: d.temperature};
         }), "depth150");
@@ -261,13 +265,15 @@
         itm.tightenScaY(axPres);
       });
 
-      itm.json("/data/mc2.json", function(error, _data) {
+      itm.json("/data/mc2.json?minute=240", function(error, _data) {
         if (error) throw error;
         var data = itm.transpose(_data);
         data.forEach(function(d) {
-          d.date = itm.isoParse(d.date);
+          var date = new Date("2000-01-01T00:00:00Z");
+          date.setSeconds(date.getSeconds()+d.timestamp);
+          d.date = date;
         });
-        data = data.filter(itm.filterNulls).filter(decimateProperties);
+        data = data.filter(itm.filterNulls);
         itm.addScalarTimeSeries(axTemp, data.map(function(d) {
           return {t: d.date, y: d.temperature};
         }), "depth250");
@@ -288,13 +294,15 @@
         itm.tightenScaY(axPres);
       });
 
-      itm.json("/data/mc3.json", function(error, _data) {
+      itm.json("/data/mc3.json?minute=240", function(error, _data) {
         if (error) throw error;
         var data = itm.transpose(_data);
         data.forEach(function(d) {
-          d.date = itm.isoParse(d.date);
+          var date = new Date("2000-01-01T00:00:00Z");
+          date.setSeconds(date.getSeconds()+d.timestamp);
+          d.date = date;
         });
-        data = data.filter(itm.filterNulls).filter(decimateProperties);
+        data = data.filter(itm.filterNulls);
         itm.addScalarTimeSeries(axTemp, data.map(function(d) {
           return {t: d.date, y: d.temperature};
         }), "depth350");
@@ -315,13 +323,15 @@
         itm.tightenScaY(axPres);
       });
 
-      itm.json("/data/mc4.json", function(error, _data) {
+      itm.json("/data/mc4.json?minute=240", function(error, _data) {
         if (error) throw error;
         var data = itm.transpose(_data);
         data.forEach(function(d) {
-          d.date = itm.isoParse(d.date);
+          var date = new Date("2000-01-01T00:00:00Z");
+          date.setSeconds(date.getSeconds()+d.timestamp);
+          d.date = date;
         });
-        data = data.filter(itm.filterNulls).filter(decimateProperties);
+        data = data.filter(itm.filterNulls);
         itm.addScalarTimeSeries(axTemp, data.map(function(d) {
           return {t: d.date, y: d.temperature};
         }), "depth500");
@@ -344,13 +354,15 @@
 
       var axCurrent = itm.createTimeSeriesAxes(geom, "#axCurrent", "Current velocity (cm/s)");
 
-      itm.json("/data/aq1.json", function(error, _data) {
+      itm.json("/data/aq1.json?minute=480", function(error, _data) {
           if (error) throw error;
           var data = itm.transpose(_data);
           data.forEach(function(d) {
-              d.date = itm.isoParse(d.date);
+              var date = new Date("2000-01-01T00:00:00Z");
+              date.setSeconds(date.getSeconds()+d.timestamp);
+              d.date = date;
           });
-          data = data.filter(itm.filterNulls).map(movingAverage).filter(decimateCurrents);
+          data = data.filter(itm.filterNulls).map(movingAverage);
           itm.addVectorTimeSeries(axCurrent, data.map(function(d) {
               var v = itm.normalizeVec(100*d.east, 100*d.north);
               return {t: d.date, y: v.mag, vx: 20*v.u, vy: 20*v.v};
@@ -358,13 +370,15 @@
           itm.rescaleAxes(axCurrent);
           itm.tightenVecY(axCurrent);
       });
-      itm.json("/data/aq2.json", function(error, _data) {
+      itm.json("/data/aq2.json?minute=480", function(error, _data) {
           if (error) throw error;
           var data = itm.transpose(_data);
           data.forEach(function(d) {
-              d.date = itm.isoParse(d.date);
+              var date = new Date("2000-01-01T00:00:00Z");
+              date.setSeconds(date.getSeconds()+d.timestamp);
+              d.date = date;
           });
-          data = data.filter(itm.filterNulls).map(movingAverage).filter(decimateCurrents);
+          data = data.filter(itm.filterNulls).map(movingAverage);
           itm.addVectorTimeSeries(axCurrent, data.map(function(d) {
               var v = itm.normalizeVec(100*d.east, 100*d.north);
               return {t: d.date, y: v.mag, vx: 20*v.u, vy: 20*v.v};
@@ -372,13 +386,15 @@
           itm.rescaleAxes(axCurrent);
           itm.tightenVecY(axCurrent);
       });
-      itm.json("/data/aq3.json", function(error, _data) {
+      itm.json("/data/aq3.json?minute=480", function(error, _data) {
           if (error) throw error;
           var data = itm.transpose(_data);
           data.forEach(function(d) {
-              d.date = itm.isoParse(d.date);
+              var date = new Date("2000-01-01T00:00:00Z");
+              date.setSeconds(date.getSeconds()+d.timestamp);
+              d.date = date;
           });
-          data = data.filter(itm.filterNulls).map(movingAverage).filter(decimateCurrents);
+          data = data.filter(itm.filterNulls).map(movingAverage);
           itm.addVectorTimeSeries(axCurrent, data.map(function(d) {
               var v = itm.normalizeVec(100*d.east, 100*d.north);
               return {t: d.date, y: v.mag, vx: 20*v.u, vy: 20*v.v};
@@ -386,13 +402,15 @@
           itm.rescaleAxes(axCurrent);
           itm.tightenVecY(axCurrent);
       });
-      itm.json("/data/aq4.json", function(error, _data) {
+      itm.json("/data/aq4.json?minute=480", function(error, _data) {
           if (error) throw error;
           var data = itm.transpose(_data);
           data.forEach(function(d) {
-              d.date = itm.isoParse(d.date);
+              var date = new Date("2000-01-01T00:00:00Z");
+              date.setSeconds(date.getSeconds()+d.timestamp);
+              d.date = date;
           });
-          data = data.filter(itm.filterNulls).map(movingAverage).filter(decimateCurrents);
+          data = data.filter(itm.filterNulls).map(movingAverage);
           itm.addVectorTimeSeries(axCurrent, data.map(function(d) {
               var v = itm.normalizeVec(100*d.east, 100*d.north);
               return {t: d.date, y: v.mag, vx: 20*v.u, vy: 20*v.v};
@@ -424,14 +442,6 @@
           v += data[i].north;
         }
         return {date: d.date, east: u / (imax-imin+1), north: v / (imax-imin+1)};
-      }
-
-      function decimateProperties(d, i) {
-        return (i%2==0);
-      }
-
-      function decimateCurrents(d, i) {
-        return (i%12==0);
       }
 
     </script>
