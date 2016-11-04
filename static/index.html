@@ -101,7 +101,7 @@
 
       <div class="row displayBlock">
         <div class="col-sm-12">
-          <h2>Website Source</h2>
+          <h4>Website Source</h4>
           <p>The Python and uncompressed JavaScript code behind this website is available on <a href="https://github.com/njwilson23/itm5live">Github</a>.</p>
         </div>
       </div> <!-- row -->
@@ -230,7 +230,7 @@
         el.innerHTML = outStr;
       }
 
-      itm.json("/data/mc1.json?minute=240", function(error, _data) {
+      itm.json("/data/mc1.json?minute=480", function(error, _data) {
         if (error) throw error;
         var data = itm.transpose(_data);
         data.forEach(function(d) {
@@ -265,7 +265,7 @@
         itm.tightenScaY(axPres);
       });
 
-      itm.json("/data/mc2.json?minute=240", function(error, _data) {
+      itm.json("/data/mc2.json?minute=480", function(error, _data) {
         if (error) throw error;
         var data = itm.transpose(_data);
         data.forEach(function(d) {
@@ -294,7 +294,7 @@
         itm.tightenScaY(axPres);
       });
 
-      itm.json("/data/mc3.json?minute=240", function(error, _data) {
+      itm.json("/data/mc3.json?minute=480", function(error, _data) {
         if (error) throw error;
         var data = itm.transpose(_data);
         data.forEach(function(d) {
@@ -323,7 +323,7 @@
         itm.tightenScaY(axPres);
       });
 
-      itm.json("/data/mc4.json?minute=240", function(error, _data) {
+      itm.json("/data/mc4.json?minute=480", function(error, _data) {
         if (error) throw error;
         var data = itm.transpose(_data);
         data.forEach(function(d) {
