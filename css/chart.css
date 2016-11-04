@@ -11,11 +11,11 @@
 
 .line {
   fill: none;
-  stroke-width: 1.5;
+  stroke-width: 0.5;
 }
 
 line {
-  stroke-width: 2;
+  stroke-width: 1;
 }
 
 .y,.label {

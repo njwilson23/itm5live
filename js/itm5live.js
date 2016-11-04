@@ -12591,11 +12591,61 @@ function createTimeSeriesAxes(geom, id, label) {
       .attr("transform", "rotate(-90)")
       .text(label);
 
-  svg.append("defs").append("clipPath")
+  var defs = svg.append("defs");
+
+  defs.append("clipPath")
         .attr("id", "clip")
       .append("rect")
         .attr("width", width)
         .attr("height", height);
+
+  defs.append("marker")
+      .attr("id", "Circle_depth150")
+      .attr("markerHeight", "4")
+      .attr("markerWidth", "4")
+      .attr("refX", "2")
+      .attr("refY", "2")
+    .append("circle")
+      .attr("cx", "2")
+      .attr("cy", "2")
+      .attr("r", "1")
+      .attr("class", "depth150");
+
+  defs.append("marker")
+      .attr("id", "Circle_depth250")
+      .attr("markerHeight", "4")
+      .attr("markerWidth", "4")
+      .attr("refX", "2")
+      .attr("refY", "2")
+    .append("circle")
+      .attr("cx", "2")
+      .attr("cy", "2")
+      .attr("r", "1")
+      .attr("class", "depth250");
+
+  defs.append("marker")
+      .attr("id", "Circle_depth350")
+      .attr("markerHeight", "4")
+      .attr("markerWidth", "4")
+      .attr("refX", "2")
+      .attr("refY", "2")
+    .append("circle")
+      .attr("cx", "2")
+      .attr("cy", "2")
+      .attr("r", "1")
+      .attr("class", "depth350");
+
+  defs.append("marker")
+      .attr("id", "Circle_depth500")
+      .attr("markerHeight", "4")
+      .attr("markerWidth", "4")
+      .attr("refX", "2")
+      .attr("refY", "2")
+    .append("circle")
+      .attr("cx", "2")
+      .attr("cy", "2")
+      .attr("r", "1")
+      .attr("class", "depth500");
 
   var zoomRect = g.append("rect")
     .attr("width", width)
@@ -12646,7 +12696,8 @@ function addScalarTimeSeries(ax, data, className) {
 
   var path$$1 = ax.g.append("path").datum(data)
     .attr("class", "line active " + className)
-    .attr("d", line$$1);
+    .attr("d", line$$1)
+    .attr("marker-mid", "url(#Circle_"+className+")");
 
   ax.series.set(className, line$$1);
   return {"path": path$$1, "line": line$$1};
@@ -12760,16 +12811,6 @@ function rescaleAxes(ax) {
     });
 }
 
-function zoomed() {
-  var ax, t = event.transform;
-  for (var i=0; i!=axes.length; i++) {
-    ax = axes[i];
-    ax.x.domain(t.rescaleX(ax.x_).domain());
-    ax.gX.call(ax.xAxis.scale(ax.x));
-    rescaleAxes(ax);
-  }
-}
-
 // Filter function that detects rows in data with any nulls
 function filterNulls(d) {
   var k = Object.keys(d);
@@ -12826,7 +12867,6 @@ exports.addVectorTimeSeries = addVectorTimeSeries;
 exports.tightenScaY = tightenScaY;
 exports.tightenVecY = tightenVecY;
 exports.rescaleAxes = rescaleAxes;
-exports.zoomed = zoomed;
 exports.filterNulls = filterNulls;
 exports.normalizeVec = normalizeVec;
 exports.transpose = transpose$1;

@@ -44,11 +44,61 @@ export function createTimeSeriesAxes(geom, id, label) {
       .attr("transform", "rotate(-90)")
       .text(label);
 
-  svg.append("defs").append("clipPath")
+  var defs = svg.append("defs");
+
+  defs.append("clipPath")
         .attr("id", "clip")
       .append("rect")
         .attr("width", width)
         .attr("height", height);
+
+  defs.append("marker")
+      .attr("id", "Circle_depth150")
+      .attr("markerHeight", "4")
+      .attr("markerWidth", "4")
+      .attr("refX", "2")
+      .attr("refY", "2")
+    .append("circle")
+      .attr("cx", "2")
+      .attr("cy", "2")
+      .attr("r", "1")
+      .attr("class", "depth150");
+
+  defs.append("marker")
+      .attr("id", "Circle_depth250")
+      .attr("markerHeight", "4")
+      .attr("markerWidth", "4")
+      .attr("refX", "2")
+      .attr("refY", "2")
+    .append("circle")
+      .attr("cx", "2")
+      .attr("cy", "2")
+      .attr("r", "1")
+      .attr("class", "depth250");
+
+  defs.append("marker")
+      .attr("id", "Circle_depth350")
+      .attr("markerHeight", "4")
+      .attr("markerWidth", "4")
+      .attr("refX", "2")
+      .attr("refY", "2")
+    .append("circle")
+      .attr("cx", "2")
+      .attr("cy", "2")
+      .attr("r", "1")
+      .attr("class", "depth350");
+
+  defs.append("marker")
+      .attr("id", "Circle_depth500")
+      .attr("markerHeight", "4")
+      .attr("markerWidth", "4")
+      .attr("refX", "2")
+      .attr("refY", "2")
+    .append("circle")
+      .attr("cx", "2")
+      .attr("cy", "2")
+      .attr("r", "1")
+      .attr("class", "depth500");
 
   var zoomRect = g.append("rect")
     .attr("width", width)
@@ -99,7 +149,8 @@ export function addScalarTimeSeries(ax, data, className) {
 
   var path = ax.g.append("path").datum(data)
     .attr("class", "line active " + className)
-    .attr("d", line);
+    .attr("d", line)
+    .attr("marker-mid", "url(#Circle_"+className+")");
 
   ax.series.set(className, line);
   return {"path": path, "line": line};
