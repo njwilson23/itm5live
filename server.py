@@ -133,7 +133,7 @@ def send_data(filename):
     if filename.endswith(".json"):
         return json.dumps(df.to_dict(orient="list")).replace("NaN", "null")
     elif filename.endswith(".csv"):
-        return df.to_csv()
+        return flask.Response(response=df.to_csv(), mimetype="text/csv")
     else:
         flask.abort(404)
 
