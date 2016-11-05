@@ -1,4 +1,4 @@
-import {select, event, min, max, extent, line as d3line, map, scaleTime, scaleLinear, axisBottom, axisLeft} from "d3";
+import {select, min, max, extent, line as d3line, map, scaleTime, scaleLinear, axisBottom, axisLeft, zoom} from "d3";
 export {json, isoParse, zoom, d3mean};
 
 // Create a set of axes for time series data

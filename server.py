@@ -77,7 +77,7 @@ def get_data(filename):
             "fields": ["date AT TIME ZONE 'UTC'", "ad4temperature", "ad4pressure", "ad4north", "ad4east", "ad4up"],
             "retfields": ["date", "temperature", "pressure", "north", "east", "up"]
         },
-        "positions.json": {
+        "positions": {
             "table": "geo_itm5",
             "fields": ["date AT TIME ZONE 'UTC'", "longitude", "latitude"],
             "retfields": ["date", "longitude", "latitude"]

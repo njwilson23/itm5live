@@ -5727,7 +5727,7 @@ var matcher$1 = matcher;
 
 var filterEvents = {};
 
-var event = null;
+exports.d3event = null;
 
 if (typeof document !== "undefined") {
   var element$1 = document.documentElement;
@@ -5748,12 +5748,12 @@ function filterContextListener(listener, index, group) {
 
 function contextListener(listener, index, group) {
   return function(event1) {
-    var event0 = event; // Events can be reentrant (e.g., focus).
-    event = event1;
+    var event0 = exports.d3event; // Events can be reentrant (e.g., focus).
+    exports.d3event = event1;
     try {
       listener.call(this, this.__data__, index, group);
     } finally {
-      event = event0;
+      exports.d3event = event0;
     }
   };
 }
@@ -5823,18 +5823,18 @@ var selection_on = function(typename, value, capture) {
 };
 
 function customEvent(event1, listener, that, args) {
-  var event0 = event;
-  event1.sourceEvent = event;
-  event = event1;
+  var event0 = exports.d3event;
+  event1.sourceEvent = exports.d3event;
+  exports.d3event = event1;
   try {
     return listener.apply(that, args);
   } finally {
-    event = event0;
+    exports.d3event = event0;
   }
 }
 
 var sourceEvent = function() {
-  var current = event, source;
+  var current = exports.d3event, source;
   while (source = current.sourceEvent) current = source;
   return current;
 };
@@ -8310,12 +8310,12 @@ var initialRadius = 10;
 var initialAngle = Math.PI * (3 - Math.sqrt(5));
 
 function nopropagation() {
-  event.stopImmediatePropagation();
+  exports.d3event.stopImmediatePropagation();
 }
 
 var noevent = function() {
-  event.preventDefault();
-  event.stopImmediatePropagation();
+  exports.d3event.preventDefault();
+  exports.d3event.stopImmediatePropagation();
 };
 
 var dragDisable = function(view) {
@@ -8370,7 +8370,7 @@ DragEvent.prototype.on = function() {
 
 // Ignore right-click, since that should open the context menu.
 function defaultFilter() {
-  return !event.button;
+  return !exports.d3event.button;
 }
 
 function defaultContainer() {
@@ -8378,7 +8378,7 @@ function defaultContainer() {
 }
 
 function defaultSubject(d) {
-  return d == null ? {x: event.x, y: event.y} : d;
+  return d == null ? {x: exports.d3event.x, y: exports.d3event.y} : d;
 }
 
 var constant$9 = function(x) {
@@ -9357,17 +9357,17 @@ Transform.prototype = {
 var identity$6 = new Transform(1, 0, 0);
 
 function nopropagation$1() {
-  event.stopImmediatePropagation();
+  exports.d3event.stopImmediatePropagation();
 }
 
 var noevent$1 = function() {
-  event.preventDefault();
-  event.stopImmediatePropagation();
+  exports.d3event.preventDefault();
+  exports.d3event.stopImmediatePropagation();
 };
 
 // Ignore right-click, since that should open the context menu.
 function defaultFilter$1() {
-  return !event.button;
+  return !exports.d3event.button;
 }
 
 function defaultExtent() {
@@ -9551,7 +9551,7 @@ var zoom = function() {
     if (!filter.apply(this, arguments)) return;
     var g = gesture(this, arguments),
         t = this.__zoom,
-        k = Math.max(k0, Math.min(k1, t.k * Math.pow(2, -event.deltaY * (event.deltaMode ? 120 : 1) / 500))),
+        k = Math.max(k0, Math.min(k1, t.k * Math.pow(2, -exports.d3event.deltaY * (exports.d3event.deltaMode ? 120 : 1) / 500))),
         p = mouse(this);
 
     // If the mouse is in the same location as before, reuse it.
@@ -9586,10 +9586,10 @@ var zoom = function() {
   function mousedowned() {
     if (touchending || !filter.apply(this, arguments)) return;
     var g = gesture(this, arguments),
-        v = select(event.view).on("mousemove.zoom", mousemoved, true).on("mouseup.zoom", mouseupped, true),
+        v = select(exports.d3event.view).on("mousemove.zoom", mousemoved, true).on("mouseup.zoom", mouseupped, true),
         p = mouse(this);
 
-    dragDisable(event.view);
+    dragDisable(exports.d3event.view);
     nopropagation$1();
     g.mouse = [p, this.__zoom.invert(p)];
     interrupt(this);
@@ -9603,7 +9603,7 @@ var zoom = function() {
 
     function mouseupped() {
       v.on("mousemove.zoom mouseup.zoom", null);
-      yesdrag(event.view, g.moved);
+      yesdrag(exports.d3event.view, g.moved);
       noevent$1();
       g.end();
     }
@@ -9614,7 +9614,7 @@ var zoom = function() {
     var t0 = this.__zoom,
         p0 = mouse(this),
         p1 = t0.invert(p0),
-        k1 = t0.k * (event.shiftKey ? 0.5 : 2),
+        k1 = t0.k * (exports.d3event.shiftKey ? 0.5 : 2),
         t1 = constrain(translate(scale(t0, k1), p0, p1), extent.apply(this, arguments));
 
     noevent$1();
@@ -9625,7 +9625,7 @@ var zoom = function() {
   function touchstarted() {
     if (!filter.apply(this, arguments)) return;
     var g = gesture(this, arguments),
-        touches$$1 = event.changedTouches,
+        touches$$1 = exports.d3event.changedTouches,
         n = touches$$1.length, i, t, p;
 
     nopropagation$1();
@@ -9639,7 +9639,7 @@ var zoom = function() {
       touchstarting = clearTimeout(touchstarting);
       if (!g.touch1) return g.end(), dblclicked.apply(this, arguments);
     }
-    if (event.touches.length === n) {
+    if (exports.d3event.touches.length === n) {
       touchstarting = setTimeout(function() { touchstarting = null; }, touchDelay);
       interrupt(this);
       g.start();
@@ -9648,7 +9648,7 @@ var zoom = function() {
 
   function touchmoved() {
     var g = gesture(this, arguments),
-        touches$$1 = event.changedTouches,
+        touches$$1 = exports.d3event.changedTouches,
         n = touches$$1.length, i, t, p, l;
 
     noevent$1();
@@ -9675,7 +9675,7 @@ var zoom = function() {
 
   function touchended() {
     var g = gesture(this, arguments),
-        touches$$1 = event.changedTouches,
+        touches$$1 = exports.d3event.changedTouches,
         n = touches$$1.length, i, t;
 
     nopropagation$1();
@@ -9731,12 +9731,12 @@ var BrushEvent = function(target, type, selection) {
 };
 
 function nopropagation$2() {
-  event.stopImmediatePropagation();
+  exports.d3event.stopImmediatePropagation();
 }
 
 var noevent$2 = function() {
-  event.preventDefault();
-  event.stopImmediatePropagation();
+  exports.d3event.preventDefault();
+  exports.d3event.stopImmediatePropagation();
 };
 
 var MODE_DRAG = {name: "drag"};
@@ -9828,7 +9828,7 @@ function type$1(t) {
 
 // Ignore right-click, since that should open the context menu.
 function defaultFilter$2() {
-  return !event.button;
+  return !exports.d3event.button;
 }
 
 function defaultExtent$1() {
@@ -10009,13 +10009,13 @@ function brush$1(dim) {
   };
 
   function started() {
-    if (event.touches) { if (event.changedTouches.length < event.touches.length) return noevent$2(); }
+    if (exports.d3event.touches) { if (exports.d3event.changedTouches.length < exports.d3event.touches.length) return noevent$2(); }
     else if (touchending) return;
     if (!filter.apply(this, arguments)) return;
 
     var that = this,
-        type = event.target.__data__.type,
-        mode = (event.metaKey ? type = "overlay" : type) === "selection" ? MODE_DRAG : (event.altKey ? MODE_CENTER : MODE_HANDLE),
+        type = exports.d3event.target.__data__.type,
+        mode = (exports.d3event.metaKey ? type = "overlay" : type) === "selection" ? MODE_DRAG : (exports.d3event.altKey ? MODE_CENTER : MODE_HANDLE),
         signX = dim === Y ? null : signsX[type],
         signY = dim === X ? null : signsY[type],
         state = local$1(that),
@@ -10028,7 +10028,7 @@ function brush$1(dim) {
         dx,
         dy,
         moving,
-        shifting = signX && signY && event.shiftKey,
+        shifting = signX && signY && exports.d3event.shiftKey,
         lockX,
         lockY,
         point0 = mouse(that),
@@ -10058,18 +10058,18 @@ function brush$1(dim) {
     var overlay = group.selectAll(".overlay")
         .attr("cursor", cursors[type]);
 
-    if (event.touches) {
+    if (exports.d3event.touches) {
       group
           .on("touchmove.brush", moved, true)
           .on("touchend.brush touchcancel.brush", ended, true);
     } else {
-      var view = select(event.view)
+      var view = select(exports.d3event.view)
           .on("keydown.brush", keydowned, true)
           .on("keyup.brush", keyupped, true)
           .on("mousemove.brush", moved, true)
           .on("mouseup.brush", ended, true);
 
-      dragDisable(event.view);
+      dragDisable(exports.d3event.view);
     }
 
     nopropagation$2();
@@ -10146,13 +10146,13 @@ function brush$1(dim) {
 
     function ended() {
       nopropagation$2();
-      if (event.touches) {
-        if (event.touches.length) return;
+      if (exports.d3event.touches) {
+        if (exports.d3event.touches.length) return;
         if (touchending) clearTimeout(touchending);
         touchending = setTimeout(function() { touchending = null; }, 500); // Ghost clicks are delayed!
         group.on("touchmove.brush touchend.brush touchcancel.brush", null);
       } else {
-        yesdrag(event.view, moving);
+        yesdrag(exports.d3event.view, moving);
         view.on("keydown.brush keyup.brush mousemove.brush mouseup.brush", null);
       }
       group.attr("pointer-events", "all");
@@ -10163,7 +10163,7 @@ function brush$1(dim) {
     }
 
     function keydowned() {
-      switch (event.keyCode) {
+      switch (exports.d3event.keyCode) {
         case 16: { // SHIFT
           shifting = signX && signY;
           break;
@@ -10193,7 +10193,7 @@ function brush$1(dim) {
     }
 
     function keyupped() {
-      switch (event.keyCode) {
+      switch (exports.d3event.keyCode) {
         case 16: { // SHIFT
           if (shifting) {
             lockX = lockY = shifting = false;
@@ -10212,7 +10212,7 @@ function brush$1(dim) {
         }
         case 32: { // SPACE
           if (mode === MODE_SPACE) {
-            if (event.altKey) {
+            if (exports.d3event.altKey) {
               if (signX) e0 = e1 - dx * signX, w0 = w1 + dx * signX;
               if (signY) s0 = s1 - dy * signY, n0 = n1 + dy * signY;
               mode = MODE_CENTER;

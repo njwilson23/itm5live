@@ -193,12 +193,12 @@
       // Update charts
 
       function zoomed() {
-        var ax, t = event.transform;
+        var ax, t = itm.d3event.transform;
         for (var i=0; i!=axes.length; i++) {
           ax = axes[i];
           ax.x.domain(t.rescaleX(ax.x_).domain());
           ax.gX.call(ax.xAxis.scale(ax.x));
-          rescaleAxes(ax);
+          itm.rescaleAxes(ax);
         }
       }
 
@@ -423,7 +423,7 @@
         .scaleExtent([1, 20])
         .translateExtent([[0, 0], [geom.width, geom.height]])
         .extent([[0, 0], [geom.width, geom.height]])
-        .on("zoom", itm.zoomed);
+        .on("zoom", zoomed);
 
       var axes = [axSal, axTemp, axPres, axCurrent];
       var zoomRect;
