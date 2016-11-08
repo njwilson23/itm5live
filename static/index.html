@@ -98,14 +98,14 @@
       </div> <!-- row -->
 
       <div class="row displayBlock">
-        <div class="col-sm-6 col-md-3"><a href="data/mc1.csv?minute=60,raw=1"><div class="button">150 m Microcat</div></a></div>
-        <div class="col-sm-6 col-md-3"><a href="data/mc2.csv?minute=60,raw=1"><div class="button">250 m Microcat</div></a></div>
-        <div class="col-sm-6 col-md-3"><a href="data/mc3.csv?minute=60,raw=1"><div class="button">350 m Microcat</div></a></div>
-        <div class="col-sm-6 col-md-3"><a href="data/mc4.csv?minute=60,raw=1"><div class="button">500 m Microcat</div></a></div>
-        <div class="col-sm-6 col-md-3"><a href="data/aq1.csv?minute=60,raw=1"><div class="button">150 m Aquadopp</div></a></div>
-        <div class="col-sm-6 col-md-3"><a href="data/aq2.csv?minute=60,raw=1"><div class="button">250 m Aquadopp</div></a></div>
-        <div class="col-sm-6 col-md-3"><a href="data/aq3.csv?minute=60,raw=1"><div class="button">350 m Aquadopp</div></a></div>
-        <div class="col-sm-6 col-md-3"><a href="data/aq4.csv?minute=60,raw=1"><div class="button">500 m Aquadopp</div></a></div>
+        <div class="col-sm-6 col-md-3"><a href="data/mc1.csv?raw=1"><div class="button">150 m Microcat</div></a></div>
+        <div class="col-sm-6 col-md-3"><a href="data/mc2.csv?raw=1"><div class="button">250 m Microcat</div></a></div>
+        <div class="col-sm-6 col-md-3"><a href="data/mc3.csv?raw=1"><div class="button">350 m Microcat</div></a></div>
+        <div class="col-sm-6 col-md-3"><a href="data/mc4.csv?raw=1"><div class="button">500 m Microcat</div></a></div>
+        <div class="col-sm-6 col-md-3"><a href="data/aq1.csv?raw=1"><div class="button">150 m Aquadopp</div></a></div>
+        <div class="col-sm-6 col-md-3"><a href="data/aq2.csv?raw=1"><div class="button">250 m Aquadopp</div></a></div>
+        <div class="col-sm-6 col-md-3"><a href="data/aq3.csv?raw=1"><div class="button">350 m Aquadopp</div></a></div>
+        <div class="col-sm-6 col-md-3"><a href="data/aq4.csv?raw=1"><div class="button">500 m Aquadopp</div></a></div>
       </div> <!-- row -->
 
       <div class="row displayBlock">
@@ -239,7 +239,7 @@
         el.innerHTML = outStr;
       }
 
-      itm.json("/data/mc1.json?minute=480", function(error, _data) {
+      itm.json("/data/mc1.json?freqMinutes=480", function(error, _data) {
         if (error) throw error;
         var data = itm.transpose(_data);
         data.forEach(function(d) {
@@ -274,7 +274,7 @@
         itm.tightenScaY(axPres);
       });
 
-      itm.json("/data/mc2.json?minute=480", function(error, _data) {
+      itm.json("/data/mc2.json?freqMinutes=480", function(error, _data) {
         if (error) throw error;
         var data = itm.transpose(_data);
         data.forEach(function(d) {
@@ -303,7 +303,7 @@
         itm.tightenScaY(axPres);
       });
 
-      itm.json("/data/mc3.json?minute=480", function(error, _data) {
+      itm.json("/data/mc3.json?freqMinutes=480", function(error, _data) {
         if (error) throw error;
         var data = itm.transpose(_data);
         data.forEach(function(d) {
@@ -332,7 +332,7 @@
         itm.tightenScaY(axPres);
       });
 
-      itm.json("/data/mc4.json?minute=480", function(error, _data) {
+      itm.json("/data/mc4.json?freqMinutes=480", function(error, _data) {
         if (error) throw error;
         var data = itm.transpose(_data);
         data.forEach(function(d) {
@@ -363,7 +363,7 @@
 
       var axCurrent = itm.createTimeSeriesAxes(geom, "#axCurrent", "Current velocity (cm/s)");
 
-      itm.json("/data/aq1.json?minute=480", function(error, _data) {
+      itm.json("/data/aq1.json?freqMinutes=480&windowMinutes=5760", function(error, _data) {
           if (error) throw error;
           var data = itm.transpose(_data);
           data.forEach(function(d) {
@@ -371,7 +371,7 @@
               date.setSeconds(date.getSeconds()+d.timestamp);
               d.date = date;
           });
-          data = data.filter(itm.filterNulls).map(movingAverage);
+          data = data.filter(itm.filterNulls);
           itm.addVectorTimeSeries(axCurrent, data.map(function(d) {
               var v = itm.normalizeVec(100*d.east, 100*d.north);
               return {t: d.date, y: v.mag, vx: 20*v.u, vy: 20*v.v};
@@ -379,7 +379,7 @@
           itm.rescaleAxes(axCurrent);
           itm.tightenVecY(axCurrent);
       });
-      itm.json("/data/aq2.json?minute=480", function(error, _data) {
+      itm.json("/data/aq2.json?freqMinutes=480&windowMinutes=5760", function(error, _data) {
           if (error) throw error;
           var data = itm.transpose(_data);
           data.forEach(function(d) {
@@ -387,7 +387,7 @@
               date.setSeconds(date.getSeconds()+d.timestamp);
               d.date = date;
           });
-          data = data.filter(itm.filterNulls).map(movingAverage);
+          data = data.filter(itm.filterNulls);
           itm.addVectorTimeSeries(axCurrent, data.map(function(d) {
               var v = itm.normalizeVec(100*d.east, 100*d.north);
               return {t: d.date, y: v.mag, vx: 20*v.u, vy: 20*v.v};
@@ -395,7 +395,7 @@
           itm.rescaleAxes(axCurrent);
           itm.tightenVecY(axCurrent);
       });
-      itm.json("/data/aq3.json?minute=480", function(error, _data) {
+      itm.json("/data/aq3.json?freqMinutes=480&windowMinutes=5760", function(error, _data) {
           if (error) throw error;
           var data = itm.transpose(_data);
           data.forEach(function(d) {
@@ -403,7 +403,7 @@
               date.setSeconds(date.getSeconds()+d.timestamp);
               d.date = date;
           });
-          data = data.filter(itm.filterNulls).map(movingAverage);
+          data = data.filter(itm.filterNulls);
           itm.addVectorTimeSeries(axCurrent, data.map(function(d) {
               var v = itm.normalizeVec(100*d.east, 100*d.north);
               return {t: d.date, y: v.mag, vx: 20*v.u, vy: 20*v.v};
@@ -411,7 +411,7 @@
           itm.rescaleAxes(axCurrent);
           itm.tightenVecY(axCurrent);
       });
-      itm.json("/data/aq4.json?minute=480", function(error, _data) {
+      itm.json("/data/aq4.json?freqMinutes=480&windowMinutes=5760", function(error, _data) {
           if (error) throw error;
           var data = itm.transpose(_data);
           data.forEach(function(d) {
@@ -419,7 +419,7 @@
               date.setSeconds(date.getSeconds()+d.timestamp);
               d.date = date;
           });
-          data = data.filter(itm.filterNulls).map(movingAverage);
+          data = data.filter(itm.filterNulls);
           itm.addVectorTimeSeries(axCurrent, data.map(function(d) {
               var v = itm.normalizeVec(100*d.east, 100*d.north);
               return {t: d.date, y: v.mag, vx: 20*v.u, vy: 20*v.v};
@@ -439,18 +439,6 @@
       for (var i=0; i!=axes.length; i++) {
         zoomRect = axes[i].zoomRect;
         zoomRect.call(zoom);
-      }
-
-      function movingAverage(d, i, data) {
-        var imin = Math.max(0, i-5);
-        var imax = Math.min(data.length, i+6)
-        var u = 0;
-        var v = 0;
-        for (var i=imin; i!=imax; i++) {
-          u += data[i].east;
-          v += data[i].north;
-        }
-        return {date: d.date, east: u / (imax-imin+1), north: v / (imax-imin+1)};
       }
 
     </script>

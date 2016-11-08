@@ -101,7 +101,7 @@ def add_utc(d):
 @app.route("/data/<path:filename>")
 def send_data(filename):
     try:
-        timeResolution = int(flask.request.args.get("minute", 60))
+        timeResolution = int(flask.request.args.get("freqMinutes", 60))
     except ValueError:
         timeResolution = 60
 
@@ -109,6 +109,11 @@ def send_data(filename):
         rawData = bool(flask.request.args.get("raw", 0))
     except ValueError:
         rawData = False
+
+    try:
+        smoothWin = int(flask.request.args.get("windowMinutes", 0))
+    except ValueError as e:
+        smoothWin = 0
 
     # load data from the database and parse a date index
     d = get_data(os.path.splitext(filename)[0])
@@ -129,6 +134,11 @@ def send_data(filename):
     # resample by time
     if timeResolution > 60:
         df = df.resample("{0:d}T".format(round(timeResolution))).mean()
+
+    # apply a moving window filter
+    if smoothWin != 0:
+        df = df.rolling("{0:d}T".format(smoothWin)).mean()
+        #df = df.rolling(smoothWin, center=True).mean()
 
     if filename.endswith(".json"):
         return json.dumps(df.to_dict(orient="list")).replace("NaN", "null")
