@@ -108,6 +108,11 @@ div.active {
   background-color: #33a02c;
 }
 
+div#eventLog {
+  padding-top: 1em;
+  line-height: 1.5;
+}
+
 .eventDate {
   font-style: italic;
 }
