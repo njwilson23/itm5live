@@ -107,3 +107,7 @@ div.active {
 #swatch500 {
   background-color: #33a02c;
 }
+
+.eventDate {
+  font-style: italic;
+}
