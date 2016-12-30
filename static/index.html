@@ -253,7 +253,7 @@
         el.innerHTML = outStr;
       }
 
-      itm.json("/data/mc1.json?freqMinutes=480", function(error, _data) {
+      itm.json("/data/mc1.json?freqMinutes=720", function(error, _data) {
         if (error) throw error;
         var data = itm.transpose(_data);
         data.forEach(function(d) {
@@ -288,7 +288,7 @@
         itm.tightenScaY(axPres);
       });
 
-      itm.json("/data/mc2.json?freqMinutes=480", function(error, _data) {
+      itm.json("/data/mc2.json?freqMinutes=720", function(error, _data) {
         if (error) throw error;
         var data = itm.transpose(_data);
         data.forEach(function(d) {
@@ -317,7 +317,7 @@
         itm.tightenScaY(axPres);
       });
 
-      itm.json("/data/mc3.json?freqMinutes=480", function(error, _data) {
+      itm.json("/data/mc3.json?freqMinutes=720", function(error, _data) {
         if (error) throw error;
         var data = itm.transpose(_data);
         data.forEach(function(d) {
@@ -346,7 +346,7 @@
         itm.tightenScaY(axPres);
       });
 
-      itm.json("/data/mc4.json?freqMinutes=480", function(error, _data) {
+      itm.json("/data/mc4.json?freqMinutes=720", function(error, _data) {
         if (error) throw error;
         var data = itm.transpose(_data);
         data.forEach(function(d) {
@@ -377,7 +377,7 @@
 
       var axCurrent = itm.createTimeSeriesAxes(geom, "#axCurrent", "Current velocity (cm/s)");
 
-      itm.json("/data/aq1.json?freqMinutes=480&windowMinutes=5760", function(error, _data) {
+      itm.json("/data/aq1.json?freqMinutes=720&windowMinutes=5760", function(error, _data) {
           if (error) throw error;
           var data = itm.transpose(_data);
           data.forEach(function(d) {
@@ -388,12 +388,12 @@
           data = data.filter(itm.filterNulls);
           itm.addVectorTimeSeries(axCurrent, data.map(function(d) {
               var v = itm.normalizeVec(100*d.east, 100*d.north);
-              return {t: d.date, y: v.mag, vx: 20*v.u, vy: 20*v.v};
+              return {t: d.date, y: v.mag, vx: 10*v.u, vy: 10*v.v};
           }), "depth150");
           itm.rescaleAxes(axCurrent);
           itm.tightenVecY(axCurrent);
       });
-      itm.json("/data/aq2.json?freqMinutes=480&windowMinutes=5760", function(error, _data) {
+      itm.json("/data/aq2.json?freqMinutes=720&windowMinutes=5760", function(error, _data) {
           if (error) throw error;
           var data = itm.transpose(_data);
           data.forEach(function(d) {
@@ -404,12 +404,12 @@
           data = data.filter(itm.filterNulls);
           itm.addVectorTimeSeries(axCurrent, data.map(function(d) {
               var v = itm.normalizeVec(100*d.east, 100*d.north);
-              return {t: d.date, y: v.mag, vx: 20*v.u, vy: 20*v.v};
+              return {t: d.date, y: v.mag, vx: 10*v.u, vy: 10*v.v};
           }), "depth250");
           itm.rescaleAxes(axCurrent);
           itm.tightenVecY(axCurrent);
       });
-      itm.json("/data/aq3.json?freqMinutes=480&windowMinutes=5760", function(error, _data) {
+      itm.json("/data/aq3.json?freqMinutes=720&windowMinutes=5760", function(error, _data) {
           if (error) throw error;
           var data = itm.transpose(_data);
           data.forEach(function(d) {
@@ -420,12 +420,12 @@
           data = data.filter(itm.filterNulls);
           itm.addVectorTimeSeries(axCurrent, data.map(function(d) {
               var v = itm.normalizeVec(100*d.east, 100*d.north);
-              return {t: d.date, y: v.mag, vx: 20*v.u, vy: 20*v.v};
+              return {t: d.date, y: v.mag, vx: 10*v.u, vy: 10*v.v};
           }), "depth350");
           itm.rescaleAxes(axCurrent);
           itm.tightenVecY(axCurrent);
       });
-      itm.json("/data/aq4.json?freqMinutes=480&windowMinutes=5760", function(error, _data) {
+      itm.json("/data/aq4.json?freqMinutes=720&windowMinutes=5760", function(error, _data) {
           if (error) throw error;
           var data = itm.transpose(_data);
           data.forEach(function(d) {
@@ -436,7 +436,7 @@
           data = data.filter(itm.filterNulls);
           itm.addVectorTimeSeries(axCurrent, data.map(function(d) {
               var v = itm.normalizeVec(100*d.east, 100*d.north);
-              return {t: d.date, y: v.mag, vx: 20*v.u, vy: 20*v.v};
+              return {t: d.date, y: v.mag, vx: 10*v.u, vy: 10*v.v};
           }), "depth500");
           itm.rescaleAxes(axCurrent);
           itm.tightenVecY(axCurrent);
