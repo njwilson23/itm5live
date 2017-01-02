@@ -51,6 +51,21 @@ class TestDownload(unittest.TestCase):
         self.assertEqual(len(aggdata), 251)
         return
 
+    def test_aggregate_daily(self):
+        # check for new year bug
+        data = [("year", "day", "d1", "d2")]
+        for i in range(600):
+            if 362+float(i)/96 < 367:
+                data.append(("2016", str(362+float(i)/96), i, 2*i))
+            else:
+                data.append(("2017", str(362+float(i)/96-366), i, 2*i))
+        aggdata = download.rows_aggregate_daily(data)
+        self.assertEqual(max(a[2] for a in aggdata[1:]),
+                         datetime.datetime(2017, 1, 2, 0, 0, tzinfo=datetime.timezone.utc))
+        #self.assertEqual(aggdata[0][2], "date")
+        #self.assertEqual(len(aggdata), 251)
+        return
+
 class TestDatabase(unittest.TestCase):
 
     def test_extract(self):

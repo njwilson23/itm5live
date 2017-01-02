@@ -93,12 +93,13 @@ def rows_aggregate_hourly(rows):
             prevdate = date
         elif (date.hour != prevdate.hour) or (i == len(rows)-1):
             # aggregate from iprev to i inclusive
-            newrow = []
-            for j in range(len(rows[i])):
-                newrow.append(statistics.mean([float(rows[_i][j]) for _i in range(iprev, i+1)]))
-            newrow.insert(2, datetime.datetime(year, prevdate.month, prevdate.day,
-                                               prevdate.hour, 0, 0,
-                                               tzinfo=datetime.timezone.utc))
+            newrow = [prevdate.year, day]
+            newrow.append(datetime.datetime(prevdate.year, prevdate.month,
+                                            prevdate.day, prevdate.hour, 0, 0,
+                                            tzinfo=datetime.timezone.utc))
+            for j in range(2, len(rows[i])):
+                newrow.append(statistics.mean([float(rows[_i][j])
+                                               for _i in range(iprev, i+1)]))
             aggrows.append(newrow)
             iprev = i+1
         i += 1
@@ -106,6 +107,7 @@ def rows_aggregate_hourly(rows):
 
 def rows_aggregate_daily(rows):
     """ create daily aggregates and insert "date" column into position 2 """
+    # create header
     aggfields = [f for f in rows[0]]
     aggfields.insert(2, "date")
     aggrows = [aggfields]
@@ -124,11 +126,15 @@ def rows_aggregate_daily(rows):
             prevdate = date
         elif (date.day != prevdate.day) or (i == len(rows)-1):
             # aggregate from iprev to i inclusive
-            newrow = []
-            for j in range(len(rows[i])):
-                newrow.append(statistics.mean([float(rows[_i][j]) for _i in range(iprev, i+1)]))
-            newrow.insert(2, datetime.datetime(year, prevdate.month, prevdate.day,
-                                               0, 0, 0, tzinfo=datetime.timezone.utc))
+            newrow = [prevdate.year, day]
+            newrow.append(datetime.datetime(prevdate.year,
+                                            prevdate.month,
+                                            prevdate.day,
+                                            0, 0, 0,
+                                            tzinfo=datetime.timezone.utc))
+            for j in range(2, len(rows[i])):
+                newrow.append(statistics.mean([float(rows[_i][j])
+                                               for _i in range(iprev, i+1)]))
             aggrows.append(newrow)
             iprev = i+1
         i += 1
