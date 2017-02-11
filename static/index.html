@@ -253,7 +253,7 @@
         el.innerHTML = outStr;
       }
 
-      itm.json("/data/mc1.json?freqMinutes=720", function(error, _data) {
+      itm.json("/data/mc1.json?freqMinutes=1440", function(error, _data) {
         if (error) throw error;
         var data = itm.transpose(_data);
         data.forEach(function(d) {
@@ -288,7 +288,7 @@
         itm.tightenScaY(axPres);
       });
 
-      itm.json("/data/mc2.json?freqMinutes=720", function(error, _data) {
+      itm.json("/data/mc2.json?freqMinutes=1440", function(error, _data) {
         if (error) throw error;
         var data = itm.transpose(_data);
         data.forEach(function(d) {
@@ -317,7 +317,7 @@
         itm.tightenScaY(axPres);
       });
 
-      itm.json("/data/mc3.json?freqMinutes=720", function(error, _data) {
+      itm.json("/data/mc3.json?freqMinutes=1440", function(error, _data) {
         if (error) throw error;
         var data = itm.transpose(_data);
         data.forEach(function(d) {
@@ -346,7 +346,7 @@
         itm.tightenScaY(axPres);
       });
 
-      itm.json("/data/mc4.json?freqMinutes=720", function(error, _data) {
+      itm.json("/data/mc4.json?freqMinutes=1440", function(error, _data) {
         if (error) throw error;
         var data = itm.transpose(_data);
         data.forEach(function(d) {
@@ -377,7 +377,7 @@
 
       var axCurrent = itm.createTimeSeriesAxes(geom, "#axCurrent", "Current velocity (cm/s)");
 
-      itm.json("/data/aq1.json?freqMinutes=720&windowMinutes=5760", function(error, _data) {
+      itm.json("/data/aq1.json?freqMinutes=1440&windowMinutes=5760", function(error, _data) {
           if (error) throw error;
           var data = itm.transpose(_data);
           data.forEach(function(d) {
@@ -393,7 +393,7 @@
           itm.rescaleAxes(axCurrent);
           itm.tightenVecY(axCurrent);
       });
-      itm.json("/data/aq2.json?freqMinutes=720&windowMinutes=5760", function(error, _data) {
+      itm.json("/data/aq2.json?freqMinutes=1440&windowMinutes=5760", function(error, _data) {
           if (error) throw error;
           var data = itm.transpose(_data);
           data.forEach(function(d) {
@@ -409,7 +409,7 @@
           itm.rescaleAxes(axCurrent);
           itm.tightenVecY(axCurrent);
       });
-      itm.json("/data/aq3.json?freqMinutes=720&windowMinutes=5760", function(error, _data) {
+      itm.json("/data/aq3.json?freqMinutes=1440&windowMinutes=5760", function(error, _data) {
           if (error) throw error;
           var data = itm.transpose(_data);
           data.forEach(function(d) {
@@ -425,7 +425,7 @@
           itm.rescaleAxes(axCurrent);
           itm.tightenVecY(axCurrent);
       });
-      itm.json("/data/aq4.json?freqMinutes=720&windowMinutes=5760", function(error, _data) {
+      itm.json("/data/aq4.json?freqMinutes=1440&windowMinutes=5760", function(error, _data) {
           if (error) throw error;
           var data = itm.transpose(_data);
           data.forEach(function(d) {
