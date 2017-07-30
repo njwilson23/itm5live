@@ -6,9 +6,9 @@ This is the code responsible for the ITM5LIVE dashboard at [itm5live.herokuapp.c
 
 ## Compile Javascript
 
-  rollup -c
+    rollup -c
 
-  uglifyjs js/itm5live.js -o itm5live.min.js -c -m
+    uglifyjs js/itm5live.js -o itm5live.min.js -c -m
 
 ## Deployment
 
